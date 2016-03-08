@@ -10,22 +10,25 @@ type Projection struct {
 	params []string
 }
 
-func (m Projection) MarshalJSON() ([]byte, error) {
+func (m *Projection) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m.params)
 }
 
-func (p *Projection) FromTokens(tokens *tokens.Tokens) error {
+func New(tokens *tokens.Tokens) (p *Projection, err error) {
 	token := tokens.Value()
 	if token != "PROJECTION" {
-		return fmt.Errorf("expected token PROJECTION, got: %s", token)
+		err = fmt.Errorf("expected token PROJECTION, got: %s", token)
+		return
 	}
 	tokens.Next()
+
+	p = new(Projection)
 
 	for tokens != nil {
 		token := tokens.Value()
 		switch token {
 		case "END":
-			return nil
+			break
 		default:
 			p.params = append(p.params, token)
 		}
@@ -33,5 +36,5 @@ func (p *Projection) FromTokens(tokens *tokens.Tokens) error {
 		tokens = tokens.Next()
 	}
 
-	return nil
+	return
 }

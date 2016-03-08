@@ -7,31 +7,34 @@ import (
 )
 
 type Web struct {
-	Metadata metadata.Metadata
+	Metadata *metadata.Metadata `json:",omitempty"`
 }
 
-func (w *Web) FromTokens(tokens *tokens.Tokens) error {
+func New(tokens *tokens.Tokens) (w *Web, err error) {
 	token := tokens.Value()
 	if token != "WEB" {
-		return fmt.Errorf("expected token WEB, got: %s", token)
+		err = fmt.Errorf("expected token WEB, got: %s", token)
+		return
 	}
 	tokens.Next()
 
+	w = new(Web)
 	for tokens != nil {
 		token := tokens.Value()
 		switch token {
 		case "METADATA":
-			if err := w.Metadata.FromTokens(tokens); err != nil {
-				return err
+			if w.Metadata, err = metadata.New(tokens); err != nil {
+				return
 			}
 		case "END":
-			return nil
+			return
 		default:
-			return fmt.Errorf("unhandled mapfile token: %s", token)
+			err = fmt.Errorf("unhandled mapfile token: %s", token)
+			return
 		}
 
 		tokens = tokens.Next()
 	}
 
-	return nil
+	return
 }

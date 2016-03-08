@@ -7,31 +7,34 @@ import (
 )
 
 type Legend struct {
-	ImageColor color.Color
+	ImageColor *color.Color `json:",omitempty"`
 }
 
-func (l *Legend) FromTokens(tokens *tokens.Tokens) error {
+func New(tokens *tokens.Tokens) (l *Legend, err error) {
 	token := tokens.Value()
 	if token != "LEGEND" {
-		return fmt.Errorf("expected token LEGEND, got: %s", token)
+		err = fmt.Errorf("expected token LEGEND, got: %s", token)
+		return
 	}
 	tokens.Next()
 
+	l = new(Legend)
 	for tokens != nil {
 		token := tokens.Value()
 		switch token {
 		case "IMAGECOLOR":
-			if err := l.ImageColor.FromTokens(tokens); err != nil {
-				return err
+			if l.ImageColor, err = color.New(tokens); err != nil {
+				return
 			}
 		case "END":
-			return nil
+			return
 		default:
-			return fmt.Errorf("unhandled mapfile token: %s", token)
+			err = fmt.Errorf("unhandled mapfile token: %s", token)
+			return
 		}
 
 		tokens = tokens.Next()
 	}
 
-	return nil
+	return
 }

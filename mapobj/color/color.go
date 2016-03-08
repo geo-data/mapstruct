@@ -2,31 +2,25 @@ package color
 
 import (
 	"github.com/geo-data/mapfile/tokens"
-	"strconv"
 )
 
 type Color struct {
-	R, G, B uint
+	R, G, B uint8
 }
 
-func (c *Color) FromTokens(tokens *tokens.Tokens) error {
-	i, err := strconv.ParseUint(tokens.Next().Value(), 10, 8)
-	if err != nil {
-		return err
+func New(tokens *tokens.Tokens) (c *Color, err error) {
+	c = new(Color)
+	if c.R, err = tokens.Next().Uint8(); err != nil {
+		return
 	}
-	c.R = uint(i)
 
-	i, err = strconv.ParseUint(tokens.Next().Value(), 10, 8)
-	if err != nil {
-		return err
+	if c.G, err = tokens.Next().Uint8(); err != nil {
+		return
 	}
-	c.G = uint(i)
 
-	i, err = strconv.ParseUint(tokens.Next().Value(), 10, 8)
-	if err != nil {
-		return err
+	if c.B, err = tokens.Next().Uint8(); err != nil {
+		return
 	}
-	c.B = uint(i)
 
-	return nil
+	return
 }

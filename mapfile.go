@@ -16,8 +16,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var mapfile mapobj.Map
-	if err = mapfile.FromTokens(tokens); err != nil {
+	var mapfile *mapobj.Map
+	if mapfile, err = mapobj.New(tokens); err != nil {
 		log.Fatal(err)
 	}
 

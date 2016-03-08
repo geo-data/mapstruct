@@ -4,24 +4,25 @@ import (
 	"fmt"
 	"github.com/geo-data/mapfile/mapobj/color"
 	"github.com/geo-data/mapfile/tokens"
-	"strconv"
 )
 
 type Label struct {
-	Type     string
-	Size     string
-	Color    color.Color
-	Position string
-	Buffer   uint
+	Type     string       `json:",omitempty"`
+	Size     string       `json:",omitempty"`
+	Color    *color.Color `json:",omitempty"`
+	Position string       `json:",omitempty"`
+	Buffer   uint32       `json:",omitempty"`
 }
 
-func (l *Label) FromTokens(tokens *tokens.Tokens) error {
+func New(tokens *tokens.Tokens) (l *Label, err error) {
 	token := tokens.Value()
 	if token != "LABEL" {
-		return fmt.Errorf("expected token LABEL, got: %s", token)
+		err = fmt.Errorf("expected token LABEL, got: %s", token)
+		return
 	}
 	tokens.Next()
 
+	l = new(Label)
 	for tokens != nil {
 		token := tokens.Value()
 		switch token {
@@ -30,25 +31,24 @@ func (l *Label) FromTokens(tokens *tokens.Tokens) error {
 		case "SIZE":
 			l.Size = tokens.Next().Value()
 		case "BUFFER":
-			i, err := strconv.ParseUint(tokens.Next().Value(), 10, 32)
-			if err != nil {
-				return err
+			if l.Buffer, err = tokens.Next().Uint32(); err != nil {
+				return
 			}
-			l.Buffer = uint(i)
 		case "POSITION":
 			l.Position = tokens.Next().Value()
 		case "COLOR":
-			if err := l.Color.FromTokens(tokens); err != nil {
-				return err
+			if l.Color, err = color.New(tokens); err != nil {
+				return
 			}
 		case "END":
-			return nil
+			return
 		default:
-			return fmt.Errorf("unhandled mapfile token: %s", token)
+			err = fmt.Errorf("unhandled mapfile token: %s", token)
+			return
 		}
 
 		tokens = tokens.Next()
 	}
 
-	return nil
+	return
 }

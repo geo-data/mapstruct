@@ -14,15 +14,16 @@ func (m Metadata) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m.kvmap)
 }
 
-func (m *Metadata) FromTokens(tokens *tokens.Tokens) error {
+func New(tokens *tokens.Tokens) (m *Metadata, err error) {
 	token := tokens.Value()
 	if token != "METADATA" {
-		return fmt.Errorf("expected token METADATA, got: %s", token)
+		err = fmt.Errorf("expected token METADATA, got: %s", token)
+		return
 	}
 	tokens.Next()
 
-	if m.kvmap == nil {
-		m.kvmap = make(map[string]string)
+	m = &Metadata{
+		kvmap: make(map[string]string),
 	}
 
 	for tokens != nil {
@@ -40,5 +41,5 @@ func (m *Metadata) FromTokens(tokens *tokens.Tokens) error {
 		tokens = tokens.Next()
 	}
 
-	return nil
+	return
 }

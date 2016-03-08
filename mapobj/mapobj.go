@@ -14,26 +14,29 @@ import (
 )
 
 type Map struct {
-	Name       string
-	Extent     extent.Extent
-	ImageType  string
-	ImageColor color.Color
-	Status     string
-	Size       size.Size
-	Fontset    string
-	Symbolset  string
-	Legend     legend.Legend
-	Scalebar   scalebar.Scalebar
-	Web        web.Web
+	Name       string                 `json:",omitempty"`
+	Extent     *extent.Extent         `json:",omitempty"`
+	ImageType  string                 `json:",omitempty"`
+	ImageColor *color.Color           `json:",omitempty"`
+	Status     string                 `json:",omitempty"`
+	Size       *size.Size             `json:",omitempty"`
+	Fontset    string                 `json:",omitempty"`
+	Symbolset  string                 `json:",omitempty"`
+	Legend     *legend.Legend         `json:",omitempty"`
+	Scalebar   *scalebar.Scalebar     `json:",omitempty"`
+	Web        *web.Web               `json:",omitempty"`
 	Projection *projection.Projection `json:",omitempty"`
 }
 
-func (m *Map) FromTokens(tokens *tokens.Tokens) error {
+func New(tokens *tokens.Tokens) (m *Map, err error) {
 	token := tokens.Value()
 	if token != "MAP" {
-		return fmt.Errorf("expected token MAP, got: %s", token)
+		err = fmt.Errorf("expected token MAP, got: %s", token)
+		return
 	}
 	tokens.Next()
+
+	m = new(Map)
 
 	for tokens != nil {
 		token = tokens.Value()
@@ -49,43 +52,42 @@ func (m *Map) FromTokens(tokens *tokens.Tokens) error {
 		case "SYMBOLSET":
 			m.Symbolset = tokens.Next().Value()
 		case "EXTENT":
-			if err := m.Extent.FromTokens(tokens); err != nil {
-				return err
+			if m.Extent, err = extent.New(tokens); err != nil {
+				return
 			}
 		case "IMAGECOLOR":
-			if err := m.ImageColor.FromTokens(tokens); err != nil {
-				return err
+			if m.ImageColor, err = color.New(tokens); err != nil {
+				return
 			}
 		case "SIZE":
-			if err := m.Size.FromTokens(tokens); err != nil {
-				return err
+			if m.Size, err = size.New(tokens); err != nil {
+				return
 			}
 		case "SCALEBAR":
-			if err := m.Scalebar.FromTokens(tokens); err != nil {
-				return err
+			if m.Scalebar, err = scalebar.New(tokens); err != nil {
+				return
 			}
 		case "LEGEND":
-			if err := m.Legend.FromTokens(tokens); err != nil {
-				return err
+			if m.Legend, err = legend.New(tokens); err != nil {
+				return
 			}
 		case "PROJECTION":
-			p := new(projection.Projection)
-			if err := p.FromTokens(tokens); err != nil {
-				return err
+			if m.Projection, err = projection.New(tokens); err != nil {
+				return
 			}
-			m.Projection = p
 		case "WEB":
-			if err := m.Web.FromTokens(tokens); err != nil {
-				return err
+			if m.Web, err = web.New(tokens); err != nil {
+				return
 			}
 		case "END":
-			return nil
+			return
 		default:
-			return fmt.Errorf("unhandled mapfile token: %s", token)
+			err = fmt.Errorf("unhandled mapfile token: %s", token)
+			return
 		}
 
 		tokens = tokens.Next()
 	}
 
-	return nil
+	return
 }

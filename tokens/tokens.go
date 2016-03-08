@@ -1,6 +1,7 @@
 package tokens
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -21,6 +22,32 @@ func (t *Tokens) Value() string {
 	}
 
 	return v
+}
+
+func (t *Tokens) Uint8() (i uint8, err error) {
+	var j uint64
+	if j, err = strconv.ParseUint(t.Value(), 10, 8); err != nil {
+		return
+	} else {
+		i = uint8(j)
+	}
+
+	return
+}
+
+func (t *Tokens) Uint32() (i uint32, err error) {
+	var j uint64
+	if j, err = strconv.ParseUint(t.Value(), 10, 32); err != nil {
+		return
+	} else {
+		i = uint32(j)
+	}
+
+	return
+}
+
+func (t *Tokens) Float64() (float64, error) {
+	return strconv.ParseFloat(t.Value(), 64)
 }
 
 func (t *Tokens) Next() *Tokens {

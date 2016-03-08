@@ -6,30 +6,31 @@ import (
 	"github.com/geo-data/mapfile/mapobj/label"
 	"github.com/geo-data/mapfile/mapobj/size"
 	"github.com/geo-data/mapfile/tokens"
-	"strconv"
 )
 
 type Scalebar struct {
-	Status          string
-	PostLabelCache  string
-	Style           uint
-	Units           string
-	Size            size.Size
-	Position        string
-	Transparent     string
-	Color           color.Color
-	ImageColor      color.Color
-	BackgroundColor color.Color
-	Label           label.Label
+	Status          string `json:",omitempty"`
+	PostLabelCache  string `json:",omitempty"`
+	Style           uint8
+	Units           string       `json:",omitempty"`
+	Size            *size.Size   `json:",omitempty"`
+	Position        string       `json:",omitempty"`
+	Transparent     string       `json:",omitempty"`
+	Color           *color.Color `json:",omitempty"`
+	ImageColor      *color.Color `json:",omitempty"`
+	BackgroundColor *color.Color `json:",omitempty"`
+	Label           *label.Label `json:",omitempty"`
 }
 
-func (s *Scalebar) FromTokens(tokens *tokens.Tokens) error {
+func New(tokens *tokens.Tokens) (s *Scalebar, err error) {
 	token := tokens.Value()
 	if token != "SCALEBAR" {
-		return fmt.Errorf("expected token SCALEBAR, got: %s", token)
+		err = fmt.Errorf("expected token SCALEBAR, got: %s", token)
+		return
 	}
 	tokens.Next()
 
+	s = new(Scalebar)
 	for tokens != nil {
 		token := tokens.Value()
 		switch token {
@@ -38,11 +39,9 @@ func (s *Scalebar) FromTokens(tokens *tokens.Tokens) error {
 		case "POSTLABELCACHE":
 			s.PostLabelCache = tokens.Next().Value()
 		case "STYLE":
-			i, err := strconv.ParseUint(tokens.Next().Value(), 10, 0)
-			if err != nil {
-				return err
+			if s.Style, err = tokens.Next().Uint8(); err != nil {
+				return
 			}
-			s.Style = uint(i)
 		case "UNITS":
 			s.Units = tokens.Next().Value()
 		case "POSITION":
@@ -50,33 +49,34 @@ func (s *Scalebar) FromTokens(tokens *tokens.Tokens) error {
 		case "TRANSPARENT":
 			s.Transparent = tokens.Next().Value()
 		case "SIZE":
-			if err := s.Size.FromTokens(tokens); err != nil {
-				return err
+			if s.Size, err = size.New(tokens); err != nil {
+				return
 			}
 		case "LABEL":
-			if err := s.Label.FromTokens(tokens); err != nil {
-				return err
+			if s.Label, err = label.New(tokens); err != nil {
+				return
 			}
 		case "IMAGECOLOR":
-			if err := s.ImageColor.FromTokens(tokens); err != nil {
-				return err
+			if s.ImageColor, err = color.New(tokens); err != nil {
+				return
 			}
 		case "COLOR":
-			if err := s.Color.FromTokens(tokens); err != nil {
-				return err
+			if s.Color, err = color.New(tokens); err != nil {
+				return
 			}
 		case "BACKGROUNDCOLOR":
-			if err := s.BackgroundColor.FromTokens(tokens); err != nil {
-				return err
+			if s.BackgroundColor, err = color.New(tokens); err != nil {
+				return
 			}
 		case "END":
-			return nil
+			return
 		default:
-			return fmt.Errorf("unhandled mapfile token: %s", token)
+			err = fmt.Errorf("unhandled mapfile token: %s", token)
+			return
 		}
 
 		tokens = tokens.Next()
 	}
 
-	return nil
+	return
 }
