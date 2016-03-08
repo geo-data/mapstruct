@@ -1,11 +1,13 @@
 package size
 
 import (
+	"fmt"
+	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/tokens"
 )
 
 type Size struct {
-	Width, Height uint32
+	Width, Height tokens.Uint32
 }
 
 func New(tokens *tokens.Tokens) (s *Size, err error) {
@@ -19,4 +21,12 @@ func New(tokens *tokens.Tokens) (s *Size, err error) {
 	}
 
 	return
+}
+
+func (s *Size) String() string {
+	return fmt.Sprintf("%s %s", s.Width, s.Height)
+}
+
+func (s *Size) Encode(enc *encoding.MapfileEncoder) error {
+	return enc.TokenValue("SIZE", s)
 }

@@ -1,11 +1,12 @@
 package color
 
 import (
+	"fmt"
 	"github.com/geo-data/mapfile/tokens"
 )
 
 type Color struct {
-	R, G, B uint8
+	R, G, B tokens.Uint8
 }
 
 func New(tokens *tokens.Tokens) (c *Color, err error) {
@@ -23,4 +24,8 @@ func New(tokens *tokens.Tokens) (c *Color, err error) {
 	}
 
 	return
+}
+
+func (c *Color) String() string {
+	return fmt.Sprintf("%d %d %d", c.R, c.G, c.B)
 }

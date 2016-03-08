@@ -3,6 +3,7 @@ package mapobj
 import (
 	"fmt"
 
+	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/mapobj/color"
 	"github.com/geo-data/mapfile/mapobj/extent"
 	"github.com/geo-data/mapfile/mapobj/legend"
@@ -14,14 +15,14 @@ import (
 )
 
 type Map struct {
-	Name       string                 `json:",omitempty"`
+	Name       tokens.String          `json:",omitempty"`
 	Extent     *extent.Extent         `json:",omitempty"`
-	ImageType  string                 `json:",omitempty"`
+	ImageType  tokens.String          `json:",omitempty"`
 	ImageColor *color.Color           `json:",omitempty"`
-	Status     string                 `json:",omitempty"`
+	Status     tokens.String          `json:",omitempty"`
 	Size       *size.Size             `json:",omitempty"`
-	Fontset    string                 `json:",omitempty"`
-	Symbolset  string                 `json:",omitempty"`
+	Fontset    tokens.String          `json:",omitempty"`
+	Symbolset  tokens.String          `json:",omitempty"`
 	Legend     *legend.Legend         `json:",omitempty"`
 	Scalebar   *scalebar.Scalebar     `json:",omitempty"`
 	Web        *web.Web               `json:",omitempty"`
@@ -87,6 +88,65 @@ func New(tokens *tokens.Tokens) (m *Map, err error) {
 		}
 
 		tokens = tokens.Next()
+	}
+
+	return
+}
+
+func (m *Map) Encode(enc *encoding.MapfileEncoder) (err error) {
+	if err = enc.TokenStart("MAP"); err != nil {
+		return
+	}
+
+	if err = enc.TokenString("NAME", m.Name); err != nil {
+		return
+	}
+	if err = enc.TokenString("IMAGETYPE", m.ImageType); err != nil {
+		return
+	}
+	if err = enc.TokenString("STATUS", m.Status); err != nil {
+		return
+	}
+	if err = enc.TokenString("FONTSET", m.Fontset); err != nil {
+		return
+	}
+	if err = enc.TokenString("SYMBOLSET", m.Symbolset); err != nil {
+		return
+	}
+
+	if m.Extent != nil {
+		if err = m.Extent.Encode(enc); err != nil {
+			return
+		}
+	}
+	if m.ImageColor != nil {
+		if err = enc.TokenValue("IMAGECOLOR", m.ImageColor); err != nil {
+			return
+		}
+	}
+	if m.Legend != nil {
+		if err = m.Legend.Encode(enc); err != nil {
+			return
+		}
+	}
+	if m.Projection != nil {
+		if err = m.Projection.Encode(enc); err != nil {
+			return
+		}
+	}
+	if m.Web != nil {
+		if err = m.Web.Encode(enc); err != nil {
+			return
+		}
+	}
+	if m.Scalebar != nil {
+		if err = m.Scalebar.Encode(enc); err != nil {
+			return
+		}
+	}
+
+	if err = enc.TokenEnd(); err != nil {
+		return
 	}
 
 	return

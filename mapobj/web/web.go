@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/mapobj/metadata"
 	"github.com/geo-data/mapfile/tokens"
 )
@@ -34,6 +35,24 @@ func New(tokens *tokens.Tokens) (w *Web, err error) {
 		}
 
 		tokens = tokens.Next()
+	}
+
+	return
+}
+
+func (w *Web) Encode(enc *encoding.MapfileEncoder) (err error) {
+	if err = enc.TokenStart("WEB"); err != nil {
+		return
+	}
+
+	if w.Metadata != nil {
+		if err = w.Metadata.Encode(enc); err != nil {
+			return
+		}
+	}
+
+	if err = enc.TokenEnd(); err != nil {
+		return
 	}
 
 	return

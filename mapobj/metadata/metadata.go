@@ -3,15 +3,20 @@ package metadata
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/tokens"
 )
 
 type Metadata struct {
-	kvmap map[string]string
+	kvmap map[fmt.Stringer]fmt.Stringer
 }
 
 func (m Metadata) MarshalJSON() ([]byte, error) {
-	return json.Marshal(m.kvmap)
+	tmap := make(map[string]string)
+	for k, v := range m.kvmap {
+		tmap[k.String()] = v.String()
+	}
+	return json.Marshal(tmap)
 }
 
 func New(tokens *tokens.Tokens) (m *Metadata, err error) {
@@ -23,7 +28,7 @@ func New(tokens *tokens.Tokens) (m *Metadata, err error) {
 	tokens.Next()
 
 	m = &Metadata{
-		kvmap: make(map[string]string),
+		kvmap: make(map[fmt.Stringer]fmt.Stringer),
 	}
 
 	for tokens != nil {
@@ -39,6 +44,24 @@ func New(tokens *tokens.Tokens) (m *Metadata, err error) {
 		m.kvmap[key] = value
 
 		tokens = tokens.Next()
+	}
+
+	return
+}
+
+func (p *Metadata) Encode(enc *encoding.MapfileEncoder) (err error) {
+	if err = enc.TokenStart("METADATA"); err != nil {
+		return
+	}
+
+	for k, v := range p.kvmap {
+		if err = enc.EncodeStrings(k, v); err != nil {
+			return
+		}
+	}
+
+	if err = enc.TokenEnd(); err != nil {
+		return
 	}
 
 	return

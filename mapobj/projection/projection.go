@@ -3,11 +3,12 @@ package projection
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/tokens"
 )
 
 type Projection struct {
-	params []string
+	params []tokens.String
 }
 
 func (m *Projection) MarshalJSON() ([]byte, error) {
@@ -34,6 +35,24 @@ func New(tokens *tokens.Tokens) (p *Projection, err error) {
 		}
 
 		tokens = tokens.Next()
+	}
+
+	return
+}
+
+func (p *Projection) Encode(enc *encoding.MapfileEncoder) (err error) {
+	if err = enc.TokenStart("PROJECTION"); err != nil {
+		return
+	}
+
+	for _, param := range p.params {
+		if err = enc.EncodeString(param); err != nil {
+			return
+		}
+	}
+
+	if err = enc.TokenEnd(); err != nil {
+		return
 	}
 
 	return

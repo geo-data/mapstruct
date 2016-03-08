@@ -2,16 +2,17 @@ package label
 
 import (
 	"fmt"
+	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/mapobj/color"
 	"github.com/geo-data/mapfile/tokens"
 )
 
 type Label struct {
-	Type     string       `json:",omitempty"`
-	Size     string       `json:",omitempty"`
-	Color    *color.Color `json:",omitempty"`
-	Position string       `json:",omitempty"`
-	Buffer   uint32       `json:",omitempty"`
+	Type     tokens.String `json:",omitempty"`
+	Size     tokens.String `json:",omitempty"`
+	Color    *color.Color  `json:",omitempty"`
+	Position tokens.String `json:",omitempty"`
+	Buffer   tokens.Uint32 `json:",omitempty"`
 }
 
 func New(tokens *tokens.Tokens) (l *Label, err error) {
@@ -48,6 +49,36 @@ func New(tokens *tokens.Tokens) (l *Label, err error) {
 		}
 
 		tokens = tokens.Next()
+	}
+
+	return
+}
+
+func (l *Label) Encode(enc *encoding.MapfileEncoder) (err error) {
+	if err = enc.TokenStart("LABEL"); err != nil {
+		return
+	}
+
+	if err = enc.TokenString("TYPE", l.Type); err != nil {
+		return
+	}
+	if err = enc.TokenString("SIZE", l.Size); err != nil {
+		return
+	}
+	if l.Color != nil {
+		if err = enc.TokenValue("COLOR", l.Color); err != nil {
+			return
+		}
+	}
+	if err = enc.TokenString("POSITION", l.Position); err != nil {
+		return
+	}
+	if err = enc.TokenValue("BUFFER", l.Buffer); err != nil {
+		return
+	}
+
+	if err = enc.TokenEnd(); err != nil {
+		return
 	}
 
 	return

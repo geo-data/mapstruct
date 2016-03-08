@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/mapobj"
 	"github.com/geo-data/mapfile/tokens"
 )
@@ -27,6 +28,14 @@ func main() {
 	}
 
 	var out bytes.Buffer
-	json.Indent(&out, b, "", " ")
-	out.WriteTo(os.Stdout)
+	json.Indent(&out, b, "", "  ")
+
+	enc := encoding.NewMapfileEncoder(&out)
+	if err = enc.Encode(mapfile); err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err = out.WriteTo(os.Stdout); err != nil {
+		log.Fatal(err)
+	}
 }
