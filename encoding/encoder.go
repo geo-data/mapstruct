@@ -12,14 +12,16 @@ type Encoder interface {
 }
 
 type MapfileEncoder struct {
-	w io.Writer
-	r *strings.Replacer
+	w     io.Writer
+	r     *strings.Replacer
+	depth int
 }
 
 func NewMapfileEncoder(w io.Writer) *MapfileEncoder {
 	return &MapfileEncoder{
 		w,
 		strings.NewReplacer(`\`, `\\`, `"`, `\"`),
+		0,
 	}
 }
 
@@ -27,9 +29,23 @@ func (e *MapfileEncoder) Encode(m Encoder) error {
 	return m.Encode(e)
 }
 
+func (e *MapfileEncoder) indent() error {
+	for i := 0; i < e.depth; i++ {
+		if _, err := e.w.Write([]byte("  ")); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (e *MapfileEncoder) TokenString(name string, value fmt.Stringer) (err error) {
 	sv := value.String()
 	if sv == "" {
+		return
+	}
+
+	if err = e.indent(); err != nil {
 		return
 	}
 
@@ -43,12 +59,20 @@ func (e *MapfileEncoder) TokenValue(name string, value fmt.Stringer) (err error)
 		return
 	}
 
+	if err = e.indent(); err != nil {
+		return
+	}
+
 	_, err = e.w.Write([]byte(fmt.Sprintf("%s %s\n", name, sv)))
 	return
 }
 
 func (e *MapfileEncoder) EncodeString(value tokens.String) (err error) {
 	if value == "" {
+		return
+	}
+
+	if err = e.indent(); err != nil {
 		return
 	}
 
@@ -66,6 +90,10 @@ func (e *MapfileEncoder) EncodeStrings(values ...fmt.Stringer) (err error) {
 		svals = append(svals, fmt.Sprintf("\"%s\"", e.r.Replace(value.String())))
 	}
 
+	if err = e.indent(); err != nil {
+		return
+	}
+
 	join := strings.Join(svals, " ")
 	if _, err = e.w.Write([]byte(fmt.Sprintf("%s\n", join))); err != nil {
 		return
@@ -75,11 +103,29 @@ func (e *MapfileEncoder) EncodeStrings(values ...fmt.Stringer) (err error) {
 }
 
 func (e *MapfileEncoder) TokenStart(name string) (err error) {
-	_, err = e.w.Write([]byte(fmt.Sprintf("%s\n", name)))
+	if err = e.indent(); err != nil {
+		return
+	}
+
+	if _, err = e.w.Write([]byte(fmt.Sprintf("%s\n", name))); err != nil {
+		return
+	}
+
+	e.depth++
+
 	return
 }
 
 func (e *MapfileEncoder) TokenEnd() (err error) {
-	_, err = e.w.Write([]byte("END\n"))
+	e.depth--
+
+	if err = e.indent(); err != nil {
+		return
+	}
+
+	if _, err = e.w.Write([]byte("END\n")); err != nil {
+		return
+	}
+
 	return
 }
