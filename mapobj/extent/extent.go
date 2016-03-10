@@ -4,35 +4,20 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapobj/point"
 	"github.com/geo-data/mapfile/tokens"
 )
 
-type Point struct {
-	X, Y tokens.Float64
-}
-
-func (p *Point) FromTokens(tokens *tokens.Tokens) (err error) {
-	if p.X, err = tokens.Next().Float64(); err != nil {
-		return
-	}
-
-	if p.Y, err = tokens.Next().Float64(); err != nil {
-		return
-	}
-
-	return
-}
-
 type Extent struct {
-	Min, Max Point
+	Min, Max *point.Point
 }
 
 func New(tokens *tokens.Tokens) (e *Extent, err error) {
 	e = new(Extent)
-	if err = e.Min.FromTokens(tokens); err != nil {
+	if e.Min, err = point.NewPoint(tokens.Next()); err != nil {
 		return
 	}
-	if err = e.Max.FromTokens(tokens); err != nil {
+	if e.Max, err = point.NewPoint(tokens.Next()); err != nil {
 		return
 	}
 	return

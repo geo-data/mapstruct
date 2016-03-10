@@ -29,7 +29,7 @@ func New(tokens *tokens.Tokens) (p *Projection, err error) {
 		token := tokens.Value()
 		switch token {
 		case "END":
-			break
+			return
 		default:
 			p.params = append(p.params, token)
 		}

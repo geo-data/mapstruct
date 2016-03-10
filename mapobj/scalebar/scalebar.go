@@ -87,16 +87,16 @@ func (s *Scalebar) Encode(enc *encoding.MapfileEncoder) (err error) {
 		return
 	}
 
-	if err = enc.TokenString("STATUS", s.Status); err != nil {
+	if err = enc.TokenValue("STATUS", s.Status); err != nil {
 		return
 	}
-	if err = enc.TokenString("POSTLABELCACHE", s.PostLabelCache); err != nil {
+	if err = enc.TokenValue("POSTLABELCACHE", s.PostLabelCache); err != nil {
 		return
 	}
 	if err = enc.TokenValue("STYLE", s.Style); err != nil {
 		return
 	}
-	if err = enc.TokenString("UNITS", s.Units); err != nil {
+	if err = enc.TokenValue("UNITS", s.Units); err != nil {
 		return
 	}
 	if s.Size != nil {
@@ -104,10 +104,10 @@ func (s *Scalebar) Encode(enc *encoding.MapfileEncoder) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenString("POSITION", s.Position); err != nil {
+	if err = enc.TokenValue("POSITION", s.Position); err != nil {
 		return
 	}
-	if err = enc.TokenString("TRANSPARENT", s.Transparent); err != nil {
+	if err = enc.TokenValue("TRANSPARENT", s.Transparent); err != nil {
 		return
 	}
 	if s.Color != nil {

@@ -1,8 +1,8 @@
 package tokens
 
 /*
-#cgo CFLAGS: -I/tmp/test/include -I/usr/include/gdal/
-#cgo LDFLAGS: -L/tmp/test/lib -lmapserver
+#cgo CFLAGS: -I/home/hrz/tmp/mapserver/include -I/usr/include/gdal/
+#cgo LDFLAGS: -L/home/hrz/tmp/mapserver/lib -lmapserver
 #include "mapserver/mapserver.h"
 */
 import "C"

@@ -6,6 +6,7 @@ import (
 	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/mapobj/color"
 	"github.com/geo-data/mapfile/mapobj/extent"
+	"github.com/geo-data/mapfile/mapobj/layer"
 	"github.com/geo-data/mapfile/mapobj/legend"
 	"github.com/geo-data/mapfile/mapobj/projection"
 	"github.com/geo-data/mapfile/mapobj/scalebar"
@@ -27,6 +28,7 @@ type Map struct {
 	Scalebar   *scalebar.Scalebar     `json:",omitempty"`
 	Web        *web.Web               `json:",omitempty"`
 	Projection *projection.Projection `json:",omitempty"`
+	Layers     []*layer.Layer         `json:",omitempty"`
 }
 
 func New(tokens *tokens.Tokens) (m *Map, err error) {
@@ -80,6 +82,12 @@ func New(tokens *tokens.Tokens) (m *Map, err error) {
 			if m.Web, err = web.New(tokens); err != nil {
 				return
 			}
+		case "LAYER":
+			var l *layer.Layer
+			if l, err = layer.New(tokens); err != nil {
+				return
+			}
+			m.Layers = append(m.Layers, l)
 		case "END":
 			return
 		default:
@@ -104,7 +112,7 @@ func (m *Map) Encode(enc *encoding.MapfileEncoder) (err error) {
 	if err = enc.TokenString("IMAGETYPE", m.ImageType); err != nil {
 		return
 	}
-	if err = enc.TokenString("STATUS", m.Status); err != nil {
+	if err = enc.TokenValue("STATUS", m.Status); err != nil {
 		return
 	}
 	if err = enc.TokenString("FONTSET", m.Fontset); err != nil {
@@ -116,6 +124,11 @@ func (m *Map) Encode(enc *encoding.MapfileEncoder) (err error) {
 
 	if m.Extent != nil {
 		if err = m.Extent.Encode(enc); err != nil {
+			return
+		}
+	}
+	if m.Size != nil {
+		if err = m.Size.Encode(enc); err != nil {
 			return
 		}
 	}
@@ -141,6 +154,12 @@ func (m *Map) Encode(enc *encoding.MapfileEncoder) (err error) {
 	}
 	if m.Scalebar != nil {
 		if err = m.Scalebar.Encode(enc); err != nil {
+			return
+		}
+	}
+
+	for _, layer := range m.Layers {
+		if err = layer.Encode(enc); err != nil {
 			return
 		}
 	}

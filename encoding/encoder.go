@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"github.com/geo-data/mapfile/tokens"
 	"io"
+	"regexp"
 	"strings"
 )
 
 type Encoder interface {
 	Encode(*MapfileEncoder) error
 }
+
+var isNum = regexp.MustCompile(`-?\d+(\.\d+)?`)
 
 type MapfileEncoder struct {
 	w     io.Writer
@@ -77,6 +80,28 @@ func (e *MapfileEncoder) EncodeString(value tokens.String) (err error) {
 	}
 
 	_, err = e.w.Write([]byte(fmt.Sprintf("\"%s\"\n", e.r.Replace(value.String()))))
+	return
+}
+
+func (e *MapfileEncoder) EncodeValues(values ...fmt.Stringer) (err error) {
+	if len(values) == 0 {
+		return
+	}
+
+	var svals []string
+	for _, value := range values {
+		svals = append(svals, value.String())
+	}
+
+	if err = e.indent(); err != nil {
+		return
+	}
+
+	join := strings.Join(svals, " ")
+	if _, err = e.w.Write([]byte(fmt.Sprintf("%s\n", join))); err != nil {
+		return
+	}
+
 	return
 }
 

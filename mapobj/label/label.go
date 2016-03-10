@@ -4,15 +4,18 @@ import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/mapobj/color"
+	"github.com/geo-data/mapfile/mapobj/style"
 	"github.com/geo-data/mapfile/tokens"
 )
 
 type Label struct {
-	Type     tokens.String `json:",omitempty"`
-	Size     tokens.String `json:",omitempty"`
-	Color    *color.Color  `json:",omitempty"`
-	Position tokens.String `json:",omitempty"`
-	Buffer   tokens.Uint32 `json:",omitempty"`
+	Type     tokens.String  `json:",omitempty"`
+	Size     tokens.String  `json:",omitempty"`
+	Font     tokens.String  `json:",omitempty"`
+	Color    *color.Color   `json:",omitempty"`
+	Position tokens.String  `json:",omitempty"`
+	Buffer   tokens.Uint32  `json:",omitempty"`
+	Styles   []*style.Style `json:",omitempty"`
 }
 
 func New(tokens *tokens.Tokens) (l *Label, err error) {
@@ -31,6 +34,8 @@ func New(tokens *tokens.Tokens) (l *Label, err error) {
 			l.Type = tokens.Next().Value()
 		case "SIZE":
 			l.Size = tokens.Next().Value()
+		case "FONT":
+			l.Font = tokens.Next().Value()
 		case "BUFFER":
 			if l.Buffer, err = tokens.Next().Uint32(); err != nil {
 				return
@@ -41,6 +46,12 @@ func New(tokens *tokens.Tokens) (l *Label, err error) {
 			if l.Color, err = color.New(tokens); err != nil {
 				return
 			}
+		case "STYLE":
+			var s *style.Style
+			if s, err = style.New(tokens); err != nil {
+				return
+			}
+			l.Styles = append(l.Styles, s)
 		case "END":
 			return
 		default:
@@ -59,10 +70,13 @@ func (l *Label) Encode(enc *encoding.MapfileEncoder) (err error) {
 		return
 	}
 
-	if err = enc.TokenString("TYPE", l.Type); err != nil {
+	if err = enc.TokenValue("TYPE", l.Type); err != nil {
 		return
 	}
-	if err = enc.TokenString("SIZE", l.Size); err != nil {
+	if err = enc.TokenValue("SIZE", l.Size); err != nil {
+		return
+	}
+	if err = enc.TokenString("FONT", l.Font); err != nil {
 		return
 	}
 	if l.Color != nil {
@@ -70,11 +84,19 @@ func (l *Label) Encode(enc *encoding.MapfileEncoder) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenString("POSITION", l.Position); err != nil {
+	if err = enc.TokenValue("POSITION", l.Position); err != nil {
 		return
 	}
-	if err = enc.TokenValue("BUFFER", l.Buffer); err != nil {
-		return
+	if uint32(l.Buffer) > uint32(0) {
+		if err = enc.TokenValue("BUFFER", l.Buffer); err != nil {
+			return
+		}
+	}
+
+	for _, style := range l.Styles {
+		if err = style.Encode(enc); err != nil {
+			return
+		}
 	}
 
 	if err = enc.TokenEnd(); err != nil {

@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
+	//	"encoding/json"
 	"log"
 	"os"
 
@@ -12,26 +12,28 @@ import (
 )
 
 func main() {
-	tokens, err := tokens.TokenizeMap("/tmp/mapserver-7.0.1/tests/test.map")
+	mapfile := os.Args[1]
+	tokens, err := tokens.TokenizeMap(mapfile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var mapfile *mapobj.Map
-	if mapfile, err = mapobj.New(tokens); err != nil {
+	var map_ *mapobj.Map
+	if map_, err = mapobj.New(tokens); err != nil {
 		log.Fatal(err)
 	}
 
-	b, err := json.Marshal(mapfile)
+	/*b, err := json.Marshal(map_)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var out bytes.Buffer
-	json.Indent(&out, b, "", "  ")
+	json.Indent(&out, b, "", "  ")*/
 
+	var out bytes.Buffer
 	enc := encoding.NewMapfileEncoder(&out)
-	if err = enc.Encode(mapfile); err != nil {
+	if err = enc.Encode(map_); err != nil {
 		log.Fatal(err)
 	}
 
