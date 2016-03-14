@@ -20,7 +20,7 @@ type Map struct {
 	Extent     *extent.Extent         `json:",omitempty"`
 	ImageType  tokens.String          `json:",omitempty"`
 	ImageColor *color.Color           `json:",omitempty"`
-	Status     tokens.String          `json:",omitempty"`
+	Status     tokens.Keyword         `json:",omitempty"`
 	Size       *size.Size             `json:",omitempty"`
 	Fontset    tokens.String          `json:",omitempty"`
 	Symbolset  tokens.String          `json:",omitempty"`
@@ -31,60 +31,70 @@ type Map struct {
 	Layers     []*layer.Layer         `json:",omitempty"`
 }
 
-func New(tokens *tokens.Tokens) (m *Map, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (m *Map, err error) {
+	token := toks.Value()
 	if token != "MAP" {
 		err = fmt.Errorf("expected token MAP, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	m = new(Map)
 
-	for tokens != nil {
-		token = tokens.Value()
+	for toks != nil {
+		token = toks.Value()
 		switch token {
 		case "IMAGETYPE":
-			m.ImageType = tokens.Next().Value()
+			if m.ImageType, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "NAME":
-			m.Name = tokens.Next().Value()
+			if m.Name, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "STATUS":
-			m.Status = tokens.Next().Value()
+			if m.Status, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "FONTSET":
-			m.Fontset = tokens.Next().Value()
+			if m.Fontset, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "SYMBOLSET":
-			m.Symbolset = tokens.Next().Value()
+			if m.Symbolset, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "EXTENT":
-			if m.Extent, err = extent.New(tokens); err != nil {
+			if m.Extent, err = extent.New(toks); err != nil {
 				return
 			}
 		case "IMAGECOLOR":
-			if m.ImageColor, err = color.New(tokens); err != nil {
+			if m.ImageColor, err = color.New(toks); err != nil {
 				return
 			}
 		case "SIZE":
-			if m.Size, err = size.New(tokens); err != nil {
+			if m.Size, err = size.New(toks); err != nil {
 				return
 			}
 		case "SCALEBAR":
-			if m.Scalebar, err = scalebar.New(tokens); err != nil {
+			if m.Scalebar, err = scalebar.New(toks); err != nil {
 				return
 			}
 		case "LEGEND":
-			if m.Legend, err = legend.New(tokens); err != nil {
+			if m.Legend, err = legend.New(toks); err != nil {
 				return
 			}
 		case "PROJECTION":
-			if m.Projection, err = projection.New(tokens); err != nil {
+			if m.Projection, err = projection.New(toks); err != nil {
 				return
 			}
 		case "WEB":
-			if m.Web, err = web.New(tokens); err != nil {
+			if m.Web, err = web.New(toks); err != nil {
 				return
 			}
 		case "LAYER":
 			var l *layer.Layer
-			if l, err = layer.New(tokens); err != nil {
+			if l, err = layer.New(toks); err != nil {
 				return
 			}
 			m.Layers = append(m.Layers, l)
@@ -95,7 +105,7 @@ func New(tokens *tokens.Tokens) (m *Map, err error) {
 			return
 		}
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return
@@ -106,19 +116,19 @@ func (m *Map) Encode(enc *encoding.MapfileEncoder) (err error) {
 		return
 	}
 
-	if err = enc.TokenString("NAME", m.Name); err != nil {
+	if err = enc.TokenStringer("NAME", m.Name); err != nil {
 		return
 	}
-	if err = enc.TokenString("IMAGETYPE", m.ImageType); err != nil {
+	if err = enc.TokenStringer("IMAGETYPE", m.ImageType); err != nil {
 		return
 	}
-	if err = enc.TokenValue("STATUS", m.Status); err != nil {
+	if err = enc.TokenStringer("STATUS", m.Status); err != nil {
 		return
 	}
-	if err = enc.TokenString("FONTSET", m.Fontset); err != nil {
+	if err = enc.TokenStringer("FONTSET", m.Fontset); err != nil {
 		return
 	}
-	if err = enc.TokenString("SYMBOLSET", m.Symbolset); err != nil {
+	if err = enc.TokenStringer("SYMBOLSET", m.Symbolset); err != nil {
 		return
 	}
 
@@ -133,7 +143,7 @@ func (m *Map) Encode(enc *encoding.MapfileEncoder) (err error) {
 		}
 	}
 	if m.ImageColor != nil {
-		if err = enc.TokenValue("IMAGECOLOR", m.ImageColor); err != nil {
+		if err = enc.TokenStringer("IMAGECOLOR", m.ImageColor); err != nil {
 			return
 		}
 	}

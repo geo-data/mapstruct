@@ -19,38 +19,46 @@ type Class struct {
 	Text       tokens.String      `json:",omitempty"`
 }
 
-func New(tokens *tokens.Tokens) (c *Class, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (c *Class, err error) {
+	token := toks.Value()
 	if token != "CLASS" {
 		err = fmt.Errorf("expected token CLASS, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	c = new(Class)
-	for tokens != nil {
-		token := tokens.Value()
+	for toks != nil {
+		token := toks.Value()
 		switch token {
 		case "NAME":
-			c.Name = tokens.Next().Value()
+			if c.Name, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "EXPRESSION":
-			c.Expression = tokens.Next().Value()
+			if c.Expression, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "TEMPLATE":
-			c.Template = tokens.Next().Value()
+			if c.Template, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "TEXT":
-			c.Text = tokens.Next().Value()
+			if c.Text, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "METADATA":
-			if c.Metadata, err = metadata.New(tokens); err != nil {
+			if c.Metadata, err = metadata.New(toks); err != nil {
 				return
 			}
 		case "STYLE":
 			var s *style.Style
-			if s, err = style.New(tokens); err != nil {
+			if s, err = style.New(toks); err != nil {
 				return
 			}
 			c.Styles = append(c.Styles, s)
 		case "LABEL":
-			if c.Label, err = label.New(tokens); err != nil {
+			if c.Label, err = label.New(toks); err != nil {
 				return
 			}
 		case "END":
@@ -60,7 +68,7 @@ func New(tokens *tokens.Tokens) (c *Class, err error) {
 			return
 		}
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return
@@ -71,16 +79,16 @@ func (c *Class) Encode(enc *encoding.MapfileEncoder) (err error) {
 		return
 	}
 
-	if err = enc.TokenString("NAME", c.Name); err != nil {
+	if err = enc.TokenStringer("NAME", c.Name); err != nil {
 		return
 	}
-	if err = enc.TokenString("EXPRESSION", c.Expression); err != nil {
+	if err = enc.TokenStringer("EXPRESSION", c.Expression); err != nil {
 		return
 	}
-	if err = enc.TokenString("TEMPLATE", c.Template); err != nil {
+	if err = enc.TokenStringer("TEMPLATE", c.Template); err != nil {
 		return
 	}
-	if err = enc.TokenString("TEXT", c.Text); err != nil {
+	if err = enc.TokenStringer("TEXT", c.Text); err != nil {
 		return
 	}
 	if c.Metadata != nil {

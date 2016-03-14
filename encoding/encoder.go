@@ -2,7 +2,6 @@ package encoding
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/tokens"
 	"io"
 	"regexp"
 	"strings"
@@ -42,35 +41,7 @@ func (e *MapfileEncoder) indent() error {
 	return nil
 }
 
-func (e *MapfileEncoder) TokenString(name string, value fmt.Stringer) (err error) {
-	sv := value.String()
-	if sv == "" {
-		return
-	}
-
-	if err = e.indent(); err != nil {
-		return
-	}
-
-	_, err = e.w.Write([]byte(fmt.Sprintf("%s \"%s\"\n", name, e.r.Replace(sv))))
-	return
-}
-
-func (e *MapfileEncoder) TokenValue(name string, value fmt.Stringer) (err error) {
-	sv := value.String()
-	if sv == "" {
-		return
-	}
-
-	if err = e.indent(); err != nil {
-		return
-	}
-
-	_, err = e.w.Write([]byte(fmt.Sprintf("%s %s\n", name, sv)))
-	return
-}
-
-func (e *MapfileEncoder) EncodeString(value tokens.String) (err error) {
+func (e *MapfileEncoder) TokenString(name string, value string) (err error) {
 	if value == "" {
 		return
 	}
@@ -79,7 +50,33 @@ func (e *MapfileEncoder) EncodeString(value tokens.String) (err error) {
 		return
 	}
 
-	_, err = e.w.Write([]byte(fmt.Sprintf("\"%s\"\n", e.r.Replace(value.String()))))
+	_, err = e.w.Write([]byte(fmt.Sprintf("%s %s\n", name, value)))
+	return
+}
+
+func (e *MapfileEncoder) TokenStringer(name string, value fmt.Stringer) (err error) {
+	if value == nil {
+		return
+	}
+
+	return e.TokenString(name, value.String())
+}
+
+func (e *MapfileEncoder) EncodeString(value fmt.Stringer) (err error) {
+	s := value.String()
+	if s == "" {
+		return
+	}
+
+	if err = e.indent(); err != nil {
+		return
+	}
+
+	if _, err = e.w.Write([]byte(s)); err != nil {
+		return
+	}
+
+	_, err = e.w.Write([]byte{'\n'})
 	return
 }
 
@@ -90,7 +87,9 @@ func (e *MapfileEncoder) EncodeValues(values ...fmt.Stringer) (err error) {
 
 	var svals []string
 	for _, value := range values {
-		svals = append(svals, value.String())
+		if value != nil {
+			svals = append(svals, value.String())
+		}
 	}
 
 	if err = e.indent(); err != nil {
@@ -106,25 +105,7 @@ func (e *MapfileEncoder) EncodeValues(values ...fmt.Stringer) (err error) {
 }
 
 func (e *MapfileEncoder) EncodeStrings(values ...fmt.Stringer) (err error) {
-	if len(values) == 0 {
-		return
-	}
-
-	var svals []string
-	for _, value := range values {
-		svals = append(svals, fmt.Sprintf("\"%s\"", e.r.Replace(value.String())))
-	}
-
-	if err = e.indent(); err != nil {
-		return
-	}
-
-	join := strings.Join(svals, " ")
-	if _, err = e.w.Write([]byte(fmt.Sprintf("%s\n", join))); err != nil {
-		return
-	}
-
-	return
+	return e.EncodeValues(values...)
 }
 
 func (e *MapfileEncoder) TokenStart(name string) (err error) {

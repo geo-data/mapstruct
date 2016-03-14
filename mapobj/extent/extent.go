@@ -38,5 +38,5 @@ func (e *Extent) String() string {
 }
 
 func (e *Extent) Encode(enc *encoding.MapfileEncoder) error {
-	return enc.TokenValue("EXTENT", e)
+	return enc.TokenStringer("EXTENT", e)
 }

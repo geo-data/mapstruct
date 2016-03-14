@@ -46,7 +46,7 @@ func (l *Legend) Encode(enc *encoding.MapfileEncoder) (err error) {
 	}
 
 	if l.ImageColor != nil {
-		if err = enc.TokenValue("IMAGECOLOR", l.ImageColor); err != nil {
+		if err = enc.TokenStringer("IMAGECOLOR", l.ImageColor); err != nil {
 			return
 		}
 	}

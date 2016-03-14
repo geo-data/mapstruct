@@ -15,26 +15,30 @@ func (m *Projection) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m.params)
 }
 
-func New(tokens *tokens.Tokens) (p *Projection, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (p *Projection, err error) {
+	token := toks.Value()
 	if token != "PROJECTION" {
 		err = fmt.Errorf("expected token PROJECTION, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	p = new(Projection)
 
-	for tokens != nil {
-		token := tokens.Value()
+	for toks != nil {
+		token := toks.Value()
 		switch token {
 		case "END":
 			return
 		default:
-			p.params = append(p.params, token)
+			var s tokens.String
+			if s, err = toks.String(); err != nil {
+				return
+			}
+			p.params = append(p.params, s)
 		}
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return

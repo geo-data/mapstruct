@@ -8,7 +8,7 @@ import (
 )
 
 type Metadata struct {
-	kvmap map[fmt.Stringer]fmt.Stringer
+	kvmap map[tokens.String]tokens.String
 }
 
 func (m Metadata) MarshalJSON() ([]byte, error) {
@@ -19,31 +19,37 @@ func (m Metadata) MarshalJSON() ([]byte, error) {
 	return json.Marshal(tmap)
 }
 
-func New(tokens *tokens.Tokens) (m *Metadata, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (m *Metadata, err error) {
+	token := toks.Value()
 	if token != "METADATA" {
 		err = fmt.Errorf("expected token METADATA, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	m = &Metadata{
-		kvmap: make(map[fmt.Stringer]fmt.Stringer),
+		kvmap: make(map[tokens.String]tokens.String),
 	}
 
-	for tokens != nil {
-		key := tokens.Value()
-		if key == "END" {
+	for toks != nil {
+		var key, value tokens.String
+		if toks.Value() == "END" {
 			break
+		}
+		if key, err = toks.String(); err != nil {
+			return
 		}
 
-		value := tokens.Next().Value()
-		if value == "END" {
+		if toks.Next().Value() == "END" {
 			break
 		}
+		if value, err = toks.String(); err != nil {
+			return
+		}
+
 		m.kvmap[key] = value
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return

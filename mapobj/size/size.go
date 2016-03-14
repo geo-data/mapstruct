@@ -28,5 +28,5 @@ func (s *Size) String() string {
 }
 
 func (s *Size) Encode(enc *encoding.MapfileEncoder) error {
-	return enc.TokenValue("SIZE", s)
+	return enc.TokenStringer("SIZE", s)
 }

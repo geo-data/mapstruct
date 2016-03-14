@@ -10,63 +10,73 @@ import (
 )
 
 type Scalebar struct {
-	Status          tokens.String `json:",omitempty"`
-	PostLabelCache  tokens.String `json:",omitempty"`
+	Status          tokens.Keyword `json:",omitempty"`
+	PostLabelCache  tokens.Keyword `json:",omitempty"`
 	Style           tokens.Uint8
-	Units           tokens.String `json:",omitempty"`
-	Size            *size.Size    `json:",omitempty"`
-	Position        tokens.String `json:",omitempty"`
-	Transparent     tokens.String `json:",omitempty"`
-	Color           *color.Color  `json:",omitempty"`
-	ImageColor      *color.Color  `json:",omitempty"`
-	BackgroundColor *color.Color  `json:",omitempty"`
-	Label           *label.Label  `json:",omitempty"`
+	Units           tokens.Keyword `json:",omitempty"`
+	Size            *size.Size     `json:",omitempty"`
+	Position        tokens.Keyword `json:",omitempty"`
+	Transparent     tokens.Keyword `json:",omitempty"`
+	Color           *color.Color   `json:",omitempty"`
+	ImageColor      *color.Color   `json:",omitempty"`
+	BackgroundColor *color.Color   `json:",omitempty"`
+	Label           *label.Label   `json:",omitempty"`
 }
 
-func New(tokens *tokens.Tokens) (s *Scalebar, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (s *Scalebar, err error) {
+	token := toks.Value()
 	if token != "SCALEBAR" {
 		err = fmt.Errorf("expected token SCALEBAR, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	s = new(Scalebar)
-	for tokens != nil {
-		token := tokens.Value()
+	for toks != nil {
+		token := toks.Value()
 		switch token {
 		case "STATUS":
-			s.Status = tokens.Next().Value()
+			if s.Status, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "POSTLABELCACHE":
-			s.PostLabelCache = tokens.Next().Value()
+			if s.PostLabelCache, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "STYLE":
-			if s.Style, err = tokens.Next().Uint8(); err != nil {
+			if s.Style, err = toks.Next().Uint8(); err != nil {
 				return
 			}
 		case "UNITS":
-			s.Units = tokens.Next().Value()
+			if s.Units, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "POSITION":
-			s.Position = tokens.Next().Value()
+			if s.Position, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "TRANSPARENT":
-			s.Transparent = tokens.Next().Value()
+			if s.Transparent, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "SIZE":
-			if s.Size, err = size.New(tokens); err != nil {
+			if s.Size, err = size.New(toks); err != nil {
 				return
 			}
 		case "LABEL":
-			if s.Label, err = label.New(tokens); err != nil {
+			if s.Label, err = label.New(toks); err != nil {
 				return
 			}
 		case "IMAGECOLOR":
-			if s.ImageColor, err = color.New(tokens); err != nil {
+			if s.ImageColor, err = color.New(toks); err != nil {
 				return
 			}
 		case "COLOR":
-			if s.Color, err = color.New(tokens); err != nil {
+			if s.Color, err = color.New(toks); err != nil {
 				return
 			}
 		case "BACKGROUNDCOLOR":
-			if s.BackgroundColor, err = color.New(tokens); err != nil {
+			if s.BackgroundColor, err = color.New(toks); err != nil {
 				return
 			}
 		case "END":
@@ -76,7 +86,7 @@ func New(tokens *tokens.Tokens) (s *Scalebar, err error) {
 			return
 		}
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return
@@ -87,16 +97,16 @@ func (s *Scalebar) Encode(enc *encoding.MapfileEncoder) (err error) {
 		return
 	}
 
-	if err = enc.TokenValue("STATUS", s.Status); err != nil {
+	if err = enc.TokenStringer("STATUS", s.Status); err != nil {
 		return
 	}
-	if err = enc.TokenValue("POSTLABELCACHE", s.PostLabelCache); err != nil {
+	if err = enc.TokenStringer("POSTLABELCACHE", s.PostLabelCache); err != nil {
 		return
 	}
-	if err = enc.TokenValue("STYLE", s.Style); err != nil {
+	if err = enc.TokenStringer("STYLE", s.Style); err != nil {
 		return
 	}
-	if err = enc.TokenValue("UNITS", s.Units); err != nil {
+	if err = enc.TokenStringer("UNITS", s.Units); err != nil {
 		return
 	}
 	if s.Size != nil {
@@ -104,24 +114,24 @@ func (s *Scalebar) Encode(enc *encoding.MapfileEncoder) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenValue("POSITION", s.Position); err != nil {
+	if err = enc.TokenStringer("POSITION", s.Position); err != nil {
 		return
 	}
-	if err = enc.TokenValue("TRANSPARENT", s.Transparent); err != nil {
+	if err = enc.TokenStringer("TRANSPARENT", s.Transparent); err != nil {
 		return
 	}
 	if s.Color != nil {
-		if err = enc.TokenValue("COLOR", s.Color); err != nil {
+		if err = enc.TokenStringer("COLOR", s.Color); err != nil {
 			return
 		}
 	}
 	if s.ImageColor != nil {
-		if err = enc.TokenValue("IMAGECOLOR", s.ImageColor); err != nil {
+		if err = enc.TokenStringer("IMAGECOLOR", s.ImageColor); err != nil {
 			return
 		}
 	}
 	if s.BackgroundColor != nil {
-		if err = enc.TokenValue("BACKGROUNDCOLOR", s.BackgroundColor); err != nil {
+		if err = enc.TokenStringer("BACKGROUNDCOLOR", s.BackgroundColor); err != nil {
 			return
 		}
 	}

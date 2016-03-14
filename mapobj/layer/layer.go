@@ -14,68 +14,84 @@ import (
 type Layer struct {
 	Name       tokens.String          `json:",omitempty"`
 	Extent     *extent.Extent         `json:",omitempty"`
-	Type       tokens.String          `json:",omitempty"`
-	Debug      tokens.String          `json:",omitempty"`
+	Type       tokens.Keyword         `json:",omitempty"`
+	Debug      fmt.Stringer           `json:",omitempty"`
 	Projection *projection.Projection `json:",omitempty"`
 	Data       tokens.String          `json:",omitempty"`
 	Processing tokens.String          `json:",omitempty"`
-	Status     tokens.String          `json:",omitempty"`
+	Status     tokens.Keyword         `json:",omitempty"`
 	Metadata   *metadata.Metadata     `json:",omitempty"`
-	ClassItem  tokens.String          `json:",omitempty"`
-	LabelItem  tokens.String          `json:",omitempty"`
+	ClassItem  tokens.Attribute       `json:",omitempty"`
+	LabelItem  tokens.Attribute       `json:",omitempty"`
 	Classes    []*class.Class         `json:",omitempty"`
 	Features   []*feature.Feature     `json:",omitempty"`
 }
 
-func New(tokens *tokens.Tokens) (l *Layer, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (l *Layer, err error) {
+	token := toks.Value()
 	if token != "LAYER" {
 		err = fmt.Errorf("expected token LAYER, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	l = new(Layer)
-	for tokens != nil {
-		token := tokens.Value()
+	for toks != nil {
+		token := toks.Value()
 		switch token {
 		case "NAME":
-			l.Name = tokens.Next().Value()
+			if l.Name, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "EXTENT":
-			if l.Extent, err = extent.New(tokens); err != nil {
+			if l.Extent, err = extent.New(toks); err != nil {
 				return
 			}
 		case "TYPE":
-			l.Type = tokens.Next().Value()
+			if l.Type, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "DEBUG":
-			l.Debug = tokens.Next().Value()
+			if l.Debug, err = toks.Next().Decode(tokens.KEYWORD | tokens.INTEGER); err != nil {
+				return
+			}
 		case "PROJECTION":
-			if l.Projection, err = projection.New(tokens); err != nil {
+			if l.Projection, err = projection.New(toks); err != nil {
 				return
 			}
 		case "DATA":
-			l.Data = tokens.Next().Value()
+			if l.Data, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "PROCESSING":
-			l.Processing = tokens.Next().Value()
+			if l.Processing, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "STATUS":
-			l.Status = tokens.Next().Value()
+			if l.Status, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "METADATA":
-			if l.Metadata, err = metadata.New(tokens); err != nil {
+			if l.Metadata, err = metadata.New(toks); err != nil {
 				return
 			}
 		case "CLASSITEM":
-			l.ClassItem = tokens.Next().Value()
+			if l.ClassItem, err = toks.Next().Attribute(); err != nil {
+				return
+			}
 		case "LABELITEM":
-			l.LabelItem = tokens.Next().Value()
+			if l.LabelItem, err = toks.Next().Attribute(); err != nil {
+				return
+			}
 		case "CLASS":
 			var c *class.Class
-			if c, err = class.New(tokens); err != nil {
+			if c, err = class.New(toks); err != nil {
 				return
 			}
 			l.Classes = append(l.Classes, c)
 		case "FEATURE":
 			var f *feature.Feature
-			if f, err = feature.New(tokens); err != nil {
+			if f, err = feature.New(toks); err != nil {
 				return
 			}
 			l.Features = append(l.Features, f)
@@ -86,7 +102,7 @@ func New(tokens *tokens.Tokens) (l *Layer, err error) {
 			return
 		}
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return
@@ -97,7 +113,7 @@ func (l *Layer) Encode(enc *encoding.MapfileEncoder) (err error) {
 		return
 	}
 
-	if err = enc.TokenString("NAME", l.Type); err != nil {
+	if err = enc.TokenStringer("NAME", l.Name); err != nil {
 		return
 	}
 	if l.Extent != nil {
@@ -105,10 +121,10 @@ func (l *Layer) Encode(enc *encoding.MapfileEncoder) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenValue("TYPE", l.Type); err != nil {
+	if err = enc.TokenStringer("TYPE", l.Type); err != nil {
 		return
 	}
-	if err = enc.TokenValue("DEBUG", l.Debug); err != nil {
+	if err = enc.TokenStringer("DEBUG", l.Debug); err != nil {
 		return
 	}
 	if l.Projection != nil {
@@ -116,13 +132,13 @@ func (l *Layer) Encode(enc *encoding.MapfileEncoder) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenString("DATA", l.Data); err != nil {
+	if err = enc.TokenStringer("DATA", l.Data); err != nil {
 		return
 	}
-	if err = enc.TokenString("PROCESSING", l.Processing); err != nil {
+	if err = enc.TokenStringer("PROCESSING", l.Processing); err != nil {
 		return
 	}
-	if err = enc.TokenValue("STATUS", l.Status); err != nil {
+	if err = enc.TokenStringer("STATUS", l.Status); err != nil {
 		return
 	}
 	if l.Metadata != nil {
@@ -130,10 +146,10 @@ func (l *Layer) Encode(enc *encoding.MapfileEncoder) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenValue("CLASSITEM", l.ClassItem); err != nil {
+	if err = enc.TokenString("CLASSITEM", l.ClassItem.QuotedString()); err != nil {
 		return
 	}
-	if err = enc.TokenValue("LABELITEM", l.LabelItem); err != nil {
+	if err = enc.TokenString("LABELITEM", l.LabelItem.QuotedString()); err != nil {
 		return
 	}
 

@@ -11,20 +11,20 @@ type Web struct {
 	Metadata *metadata.Metadata `json:",omitempty"`
 }
 
-func New(tokens *tokens.Tokens) (w *Web, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (w *Web, err error) {
+	token := toks.Value()
 	if token != "WEB" {
 		err = fmt.Errorf("expected token WEB, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	w = new(Web)
-	for tokens != nil {
-		token := tokens.Value()
+	for toks != nil {
+		token := toks.Value()
 		switch token {
 		case "METADATA":
-			if w.Metadata, err = metadata.New(tokens); err != nil {
+			if w.Metadata, err = metadata.New(toks); err != nil {
 				return
 			}
 		case "END":
@@ -34,7 +34,7 @@ func New(tokens *tokens.Tokens) (w *Web, err error) {
 			return
 		}
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return

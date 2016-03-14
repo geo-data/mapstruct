@@ -20,6 +20,7 @@ func main() {
 
 	var map_ *mapobj.Map
 	if map_, err = mapobj.New(tokens); err != nil {
+		panic(err)
 		log.Fatal(err)
 	}
 

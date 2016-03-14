@@ -10,40 +10,49 @@ import (
 type Style struct {
 	Color         *color.Color  `json:",omitempty"`
 	OutlineColor  *color.Color  `json:",omitempty"`
-	Symbol        tokens.String `json:",omitempty"`
-	Size          tokens.String `json:",omitempty"`
-	Width         tokens.String `json:",omitempty"`
+	Symbol        fmt.Stringer  `json:",omitempty"`
+	Size          fmt.Stringer  `json:",omitempty"`
+	Width         fmt.Stringer  `json:",omitempty"`
 	GeomTransform tokens.String `json:",omitempty"`
 }
 
-func New(tokens *tokens.Tokens) (s *Style, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (s *Style, err error) {
+	token := toks.Value()
 	if token != "STYLE" {
 		err = fmt.Errorf("expected token STYLE, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	s = new(Style)
-	for tokens != nil {
-		token := tokens.Value()
+	for toks != nil {
+		token := toks.Value()
 		switch token {
 		case "COLOR":
-			if s.Color, err = color.New(tokens); err != nil {
+			if s.Color, err = color.New(toks); err != nil {
 				return
 			}
 		case "OUTLINECOLOR":
-			if s.OutlineColor, err = color.New(tokens); err != nil {
+			if s.OutlineColor, err = color.New(toks); err != nil {
 				return
 			}
 		case "SYMBOL":
-			s.Symbol = tokens.Next().Value()
+			if s.Symbol, err = toks.Next().Decode(tokens.INTEGER | tokens.STRING | tokens.ATTRIBUTE); err != nil {
+				return
+			}
 		case "SIZE":
-			s.Size = tokens.Next().Value()
+			if s.Size, err = toks.Next().Decode(tokens.FLOAT64 | tokens.ATTRIBUTE); err != nil {
+				return
+			}
 		case "WIDTH":
-			s.Size = tokens.Next().Value()
+			if s.Width, err = toks.Next().Decode(tokens.STRING | tokens.FLOAT64); err != nil {
+				err = fmt.Errorf("could not decode WIDTH: %s", err)
+				return
+			}
 		case "GEOMTRANSFORM":
-			s.GeomTransform = tokens.Next().Value()
+			if s.GeomTransform, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "END":
 			return
 		default:
@@ -51,7 +60,7 @@ func New(tokens *tokens.Tokens) (s *Style, err error) {
 			return
 		}
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return
@@ -63,25 +72,25 @@ func (s *Style) Encode(enc *encoding.MapfileEncoder) (err error) {
 	}
 
 	if s.Color != nil {
-		if err = enc.TokenValue("COLOR", s.Color); err != nil {
+		if err = enc.TokenStringer("COLOR", s.Color); err != nil {
 			return
 		}
 	}
 	if s.OutlineColor != nil {
-		if err = enc.TokenValue("OUTLINECOLOR", s.OutlineColor); err != nil {
+		if err = enc.TokenStringer("OUTLINECOLOR", s.OutlineColor); err != nil {
 			return
 		}
 	}
-	if err = enc.TokenString("SYMBOL", s.Symbol); err != nil {
+	if err = enc.TokenStringer("SYMBOL", s.Symbol); err != nil {
 		return
 	}
-	if err = enc.TokenValue("SIZE", s.Size); err != nil {
+	if err = enc.TokenStringer("SIZE", s.Size); err != nil {
 		return
 	}
-	if err = enc.TokenValue("WIDTH", s.Width); err != nil {
+	if err = enc.TokenStringer("WIDTH", s.Width); err != nil {
 		return
 	}
-	if err = enc.TokenValue("GEOMTRANSFORM", s.GeomTransform); err != nil {
+	if err = enc.TokenStringer("GEOMTRANSFORM", s.GeomTransform); err != nil {
 		return
 	}
 

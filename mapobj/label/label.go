@@ -9,46 +9,54 @@ import (
 )
 
 type Label struct {
-	Type     tokens.String  `json:",omitempty"`
-	Size     tokens.String  `json:",omitempty"`
+	Type     tokens.Keyword `json:",omitempty"`
+	Size     fmt.Stringer   `json:",omitempty"`
 	Font     tokens.String  `json:",omitempty"`
 	Color    *color.Color   `json:",omitempty"`
-	Position tokens.String  `json:",omitempty"`
+	Position tokens.Keyword `json:",omitempty"`
 	Buffer   tokens.Uint32  `json:",omitempty"`
 	Styles   []*style.Style `json:",omitempty"`
 }
 
-func New(tokens *tokens.Tokens) (l *Label, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (l *Label, err error) {
+	token := toks.Value()
 	if token != "LABEL" {
 		err = fmt.Errorf("expected token LABEL, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	l = new(Label)
-	for tokens != nil {
-		token := tokens.Value()
+	for toks != nil {
+		token := toks.Value()
 		switch token {
 		case "TYPE":
-			l.Type = tokens.Next().Value()
+			if l.Type, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "SIZE":
-			l.Size = tokens.Next().Value()
+			if l.Size, err = toks.Next().Decode(tokens.FLOAT64 | tokens.KEYWORD | tokens.ATTRIBUTE); err != nil {
+				return
+			}
 		case "FONT":
-			l.Font = tokens.Next().Value()
+			if l.Font, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "BUFFER":
-			if l.Buffer, err = tokens.Next().Uint32(); err != nil {
+			if l.Buffer, err = toks.Next().Uint32(); err != nil {
 				return
 			}
 		case "POSITION":
-			l.Position = tokens.Next().Value()
+			if l.Position, err = toks.Next().Keyword(); err != nil {
+				return
+			}
 		case "COLOR":
-			if l.Color, err = color.New(tokens); err != nil {
+			if l.Color, err = color.New(toks); err != nil {
 				return
 			}
 		case "STYLE":
 			var s *style.Style
-			if s, err = style.New(tokens); err != nil {
+			if s, err = style.New(toks); err != nil {
 				return
 			}
 			l.Styles = append(l.Styles, s)
@@ -59,7 +67,7 @@ func New(tokens *tokens.Tokens) (l *Label, err error) {
 			return
 		}
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return
@@ -70,25 +78,25 @@ func (l *Label) Encode(enc *encoding.MapfileEncoder) (err error) {
 		return
 	}
 
-	if err = enc.TokenValue("TYPE", l.Type); err != nil {
+	if err = enc.TokenStringer("TYPE", l.Type); err != nil {
 		return
 	}
-	if err = enc.TokenValue("SIZE", l.Size); err != nil {
+	if err = enc.TokenStringer("SIZE", l.Size); err != nil {
 		return
 	}
-	if err = enc.TokenString("FONT", l.Font); err != nil {
+	if err = enc.TokenStringer("FONT", l.Font); err != nil {
 		return
 	}
 	if l.Color != nil {
-		if err = enc.TokenValue("COLOR", l.Color); err != nil {
+		if err = enc.TokenStringer("COLOR", l.Color); err != nil {
 			return
 		}
 	}
-	if err = enc.TokenValue("POSITION", l.Position); err != nil {
+	if err = enc.TokenStringer("POSITION", l.Position); err != nil {
 		return
 	}
 	if uint32(l.Buffer) > uint32(0) {
-		if err = enc.TokenValue("BUFFER", l.Buffer); err != nil {
+		if err = enc.TokenStringer("BUFFER", l.Buffer); err != nil {
 			return
 		}
 	}

@@ -14,26 +14,32 @@ type Feature struct {
 	Points *point.Points `json:",omitempty"`
 }
 
-func New(tokens *tokens.Tokens) (c *Feature, err error) {
-	token := tokens.Value()
+func New(toks *tokens.Tokens) (c *Feature, err error) {
+	token := toks.Value()
 	if token != "FEATURE" {
 		err = fmt.Errorf("expected token FEATURE, got: %s", token)
 		return
 	}
-	tokens.Next()
+	toks.Next()
 
 	c = new(Feature)
-	for tokens != nil {
-		token := tokens.Value()
+	for toks != nil {
+		token := toks.Value()
 		switch token {
 		case "WKT":
-			c.Wkt = tokens.Next().Value()
+			if c.Wkt, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "ITEMS":
-			c.Items = tokens.Next().Value()
+			if c.Items, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "TEXT":
-			c.Text = tokens.Next().Value()
+			if c.Text, err = toks.Next().String(); err != nil {
+				return
+			}
 		case "POINTS":
-			if c.Points, err = point.NewPoints(tokens); err != nil {
+			if c.Points, err = point.NewPoints(toks); err != nil {
 				return
 			}
 		case "END":
@@ -43,7 +49,7 @@ func New(tokens *tokens.Tokens) (c *Feature, err error) {
 			return
 		}
 
-		tokens = tokens.Next()
+		toks = toks.Next()
 	}
 
 	return
@@ -54,13 +60,13 @@ func (c *Feature) Encode(enc *encoding.MapfileEncoder) (err error) {
 		return
 	}
 
-	if err = enc.TokenString("WKT", c.Wkt); err != nil {
+	if err = enc.TokenStringer("WKT", c.Wkt); err != nil {
 		return
 	}
-	if err = enc.TokenString("ITEMS", c.Items); err != nil {
+	if err = enc.TokenStringer("ITEMS", c.Items); err != nil {
 		return
 	}
-	if err = enc.TokenString("TEXT", c.Text); err != nil {
+	if err = enc.TokenStringer("TEXT", c.Text); err != nil {
 		return
 	}
 	if c.Points != nil {
