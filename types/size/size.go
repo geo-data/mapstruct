@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
 )
 
 type Size struct {
-	Width, Height tokens.Uint32
+	Width, Height types.Uint32
 }
 
 func New(tokens *tokens.Tokens) (s *Size, err error) {

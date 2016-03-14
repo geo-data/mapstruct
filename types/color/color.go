@@ -3,10 +3,11 @@ package color
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
 )
 
 type Color struct {
-	R, G, B tokens.Uint8
+	R, G, B types.Uint8
 }
 
 func New(tokens *tokens.Tokens) (c *Color, err error) {

@@ -3,14 +3,15 @@ package feature
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj/point"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapfile/types/point"
 )
 
 type Feature struct {
-	Wkt    tokens.String `json:",omitempty"`
-	Items  tokens.String `json:",omitempty"`
-	Text   tokens.String `json:",omitempty"`
+	Wkt    types.String  `json:",omitempty"`
+	Items  types.String  `json:",omitempty"`
+	Text   types.String  `json:",omitempty"`
 	Points *point.Points `json:",omitempty"`
 }
 

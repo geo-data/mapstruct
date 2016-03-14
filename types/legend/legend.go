@@ -3,7 +3,7 @@ package legend
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj/color"
+	"github.com/geo-data/mapfile/types/color"
 	"github.com/geo-data/mapfile/tokens"
 )
 

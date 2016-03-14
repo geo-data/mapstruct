@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
 )
 
 type Metadata struct {
-	kvmap map[tokens.String]tokens.String
+	kvmap map[types.String]types.String
 }
 
 func (m Metadata) MarshalJSON() ([]byte, error) {
@@ -28,11 +29,11 @@ func New(toks *tokens.Tokens) (m *Metadata, err error) {
 	toks.Next()
 
 	m = &Metadata{
-		kvmap: make(map[tokens.String]tokens.String),
+		kvmap: make(map[types.String]types.String),
 	}
 
 	for toks != nil {
-		var key, value tokens.String
+		var key, value types.String
 		if toks.Value() == "END" {
 			break
 		}

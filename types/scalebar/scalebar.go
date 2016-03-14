@@ -3,24 +3,25 @@ package scalebar
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj/color"
-	"github.com/geo-data/mapfile/mapobj/label"
-	"github.com/geo-data/mapfile/mapobj/size"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapfile/types/color"
+	"github.com/geo-data/mapfile/types/label"
+	"github.com/geo-data/mapfile/types/size"
 )
 
 type Scalebar struct {
-	Status          tokens.Keyword `json:",omitempty"`
-	PostLabelCache  tokens.Keyword `json:",omitempty"`
-	Style           tokens.Uint8
-	Units           tokens.Keyword `json:",omitempty"`
-	Size            *size.Size     `json:",omitempty"`
-	Position        tokens.Keyword `json:",omitempty"`
-	Transparent     tokens.Keyword `json:",omitempty"`
-	Color           *color.Color   `json:",omitempty"`
-	ImageColor      *color.Color   `json:",omitempty"`
-	BackgroundColor *color.Color   `json:",omitempty"`
-	Label           *label.Label   `json:",omitempty"`
+	Status          types.Keyword `json:",omitempty"`
+	PostLabelCache  types.Keyword `json:",omitempty"`
+	Style           types.Uint8
+	Units           types.Keyword `json:",omitempty"`
+	Size            *size.Size    `json:",omitempty"`
+	Position        types.Keyword `json:",omitempty"`
+	Transparent     types.Keyword `json:",omitempty"`
+	Color           *color.Color  `json:",omitempty"`
+	ImageColor      *color.Color  `json:",omitempty"`
+	BackgroundColor *color.Color  `json:",omitempty"`
+	Label           *label.Label  `json:",omitempty"`
 }
 
 func New(toks *tokens.Tokens) (s *Scalebar, err error) {

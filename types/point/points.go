@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
 )
 
 type Point struct {
-	X, Y tokens.Float64
+	X, Y types.Float64
 }
 
 func NewPoint(tokens *tokens.Tokens) (p *Point, err error) {
@@ -29,7 +30,7 @@ func (p *Point) String() string {
 }
 
 func (p *Point) MarshalJSON() ([]byte, error) {
-	return json.Marshal([]tokens.Float64{p.X, p.Y})
+	return json.Marshal([]types.Float64{p.X, p.Y})
 }
 
 type Points struct {

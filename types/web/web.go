@@ -3,7 +3,7 @@ package web
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj/metadata"
+	"github.com/geo-data/mapfile/types/metadata"
 	"github.com/geo-data/mapfile/tokens"
 )
 

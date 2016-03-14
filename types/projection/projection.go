@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
 )
 
 type Projection struct {
-	params []tokens.String
+	params []types.String
 }
 
 func (m *Projection) MarshalJSON() ([]byte, error) {
@@ -31,7 +32,7 @@ func New(toks *tokens.Tokens) (p *Projection, err error) {
 		case "END":
 			return
 		default:
-			var s tokens.String
+			var s types.String
 			if s, err = toks.String(); err != nil {
 				return
 			}

@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj/point"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapfile/types/point"
 )
 
 type Extent struct {
@@ -24,7 +25,7 @@ func New(tokens *tokens.Tokens) (e *Extent, err error) {
 }
 
 func (e *Extent) MarshalJSON() ([]byte, error) {
-	a := []tokens.Float64{
+	a := []types.Float64{
 		e.Min.X,
 		e.Min.Y,
 		e.Max.X,

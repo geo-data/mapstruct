@@ -4,26 +4,27 @@ import (
 	"fmt"
 
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj/color"
-	"github.com/geo-data/mapfile/mapobj/extent"
-	"github.com/geo-data/mapfile/mapobj/layer"
-	"github.com/geo-data/mapfile/mapobj/legend"
-	"github.com/geo-data/mapfile/mapobj/projection"
-	"github.com/geo-data/mapfile/mapobj/scalebar"
-	"github.com/geo-data/mapfile/mapobj/size"
-	"github.com/geo-data/mapfile/mapobj/web"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapfile/types/color"
+	"github.com/geo-data/mapfile/types/extent"
+	"github.com/geo-data/mapfile/types/layer"
+	"github.com/geo-data/mapfile/types/legend"
+	"github.com/geo-data/mapfile/types/projection"
+	"github.com/geo-data/mapfile/types/scalebar"
+	"github.com/geo-data/mapfile/types/size"
+	"github.com/geo-data/mapfile/types/web"
 )
 
 type Map struct {
-	Name       tokens.String          `json:",omitempty"`
+	Name       types.String           `json:",omitempty"`
 	Extent     *extent.Extent         `json:",omitempty"`
-	ImageType  tokens.String          `json:",omitempty"`
+	ImageType  types.String           `json:",omitempty"`
 	ImageColor *color.Color           `json:",omitempty"`
-	Status     tokens.Keyword         `json:",omitempty"`
+	Status     types.Keyword          `json:",omitempty"`
 	Size       *size.Size             `json:",omitempty"`
-	Fontset    tokens.String          `json:",omitempty"`
-	Symbolset  tokens.String          `json:",omitempty"`
+	Fontset    types.String           `json:",omitempty"`
+	Symbolset  types.String           `json:",omitempty"`
 	Legend     *legend.Legend         `json:",omitempty"`
 	Scalebar   *scalebar.Scalebar     `json:",omitempty"`
 	Web        *web.Web               `json:",omitempty"`

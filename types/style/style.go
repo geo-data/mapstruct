@@ -3,17 +3,18 @@ package style
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj/color"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapfile/types/color"
 )
 
 type Style struct {
-	Color         *color.Color  `json:",omitempty"`
-	OutlineColor  *color.Color  `json:",omitempty"`
-	Symbol        fmt.Stringer  `json:",omitempty"`
-	Size          fmt.Stringer  `json:",omitempty"`
-	Width         fmt.Stringer  `json:",omitempty"`
-	GeomTransform tokens.String `json:",omitempty"`
+	Color         *color.Color `json:",omitempty"`
+	OutlineColor  *color.Color `json:",omitempty"`
+	Symbol        fmt.Stringer `json:",omitempty"`
+	Size          fmt.Stringer `json:",omitempty"`
+	Width         fmt.Stringer `json:",omitempty"`
+	GeomTransform types.String `json:",omitempty"`
 }
 
 func New(toks *tokens.Tokens) (s *Style, err error) {

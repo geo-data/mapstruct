@@ -3,26 +3,27 @@ package layer
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj/class"
-	"github.com/geo-data/mapfile/mapobj/extent"
-	"github.com/geo-data/mapfile/mapobj/feature"
-	"github.com/geo-data/mapfile/mapobj/metadata"
-	"github.com/geo-data/mapfile/mapobj/projection"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapfile/types/class"
+	"github.com/geo-data/mapfile/types/extent"
+	"github.com/geo-data/mapfile/types/feature"
+	"github.com/geo-data/mapfile/types/metadata"
+	"github.com/geo-data/mapfile/types/projection"
 )
 
 type Layer struct {
-	Name       tokens.String          `json:",omitempty"`
+	Name       types.String           `json:",omitempty"`
 	Extent     *extent.Extent         `json:",omitempty"`
-	Type       tokens.Keyword         `json:",omitempty"`
+	Type       types.Keyword          `json:",omitempty"`
 	Debug      fmt.Stringer           `json:",omitempty"`
 	Projection *projection.Projection `json:",omitempty"`
-	Data       tokens.String          `json:",omitempty"`
-	Processing tokens.String          `json:",omitempty"`
-	Status     tokens.Keyword         `json:",omitempty"`
+	Data       types.String           `json:",omitempty"`
+	Processing types.String           `json:",omitempty"`
+	Status     types.Keyword          `json:",omitempty"`
 	Metadata   *metadata.Metadata     `json:",omitempty"`
-	ClassItem  tokens.Attribute       `json:",omitempty"`
-	LabelItem  tokens.Attribute       `json:",omitempty"`
+	ClassItem  types.Attribute        `json:",omitempty"`
+	LabelItem  types.Attribute        `json:",omitempty"`
 	Classes    []*class.Class         `json:",omitempty"`
 	Features   []*feature.Feature     `json:",omitempty"`
 }

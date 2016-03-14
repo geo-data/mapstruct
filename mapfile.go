@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types/mapobj"
 )
 
 func main() {

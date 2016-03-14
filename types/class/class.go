@@ -3,20 +3,21 @@ package class
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/encoding"
-	"github.com/geo-data/mapfile/mapobj/label"
-	"github.com/geo-data/mapfile/mapobj/metadata"
-	"github.com/geo-data/mapfile/mapobj/style"
 	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapfile/types/label"
+	"github.com/geo-data/mapfile/types/metadata"
+	"github.com/geo-data/mapfile/types/style"
 )
 
 type Class struct {
-	Name       tokens.String      `json:",omitempty"`
-	Expression tokens.String      `json:",omitempty"`
+	Name       types.String       `json:",omitempty"`
+	Expression types.String       `json:",omitempty"`
 	Metadata   *metadata.Metadata `json:",omitempty"`
 	Styles     []*style.Style     `json:",omitempty"`
 	Label      *label.Label       `json:",omitempty"`
-	Template   tokens.String      `json:",omitempty"`
-	Text       tokens.String      `json:",omitempty"`
+	Template   types.String       `json:",omitempty"`
+	Text       types.String       `json:",omitempty"`
 }
 
 func New(toks *tokens.Tokens) (c *Class, err error) {
