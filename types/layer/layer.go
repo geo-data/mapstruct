@@ -16,7 +16,7 @@ type Layer struct {
 	Name       types.String           `json:",omitempty"`
 	Extent     *extent.Extent         `json:",omitempty"`
 	Type       types.Keyword          `json:",omitempty"`
-	Debug      fmt.Stringer           `json:",omitempty"`
+	Debug      types.Union            `json:",omitempty"`
 	Projection *projection.Projection `json:",omitempty"`
 	Data       types.String           `json:",omitempty"`
 	Processing types.String           `json:",omitempty"`
@@ -125,7 +125,7 @@ func (l *Layer) Encode(enc *encoding.MapfileEncoder) (err error) {
 	if err = enc.TokenStringer("TYPE", l.Type); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("DEBUG", l.Debug); err != nil {
+	if err = enc.TokenUnion("DEBUG", l.Debug); err != nil {
 		return
 	}
 	if l.Projection != nil {

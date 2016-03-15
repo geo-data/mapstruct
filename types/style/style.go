@@ -11,9 +11,9 @@ import (
 type Style struct {
 	Color         *color.Color `json:",omitempty"`
 	OutlineColor  *color.Color `json:",omitempty"`
-	Symbol        fmt.Stringer `json:",omitempty"`
-	Size          fmt.Stringer `json:",omitempty"`
-	Width         fmt.Stringer `json:",omitempty"`
+	Symbol        types.Union  `json:",omitempty"`
+	Size          types.Union  `json:",omitempty"`
+	Width         types.Union  `json:",omitempty"`
 	GeomTransform types.String `json:",omitempty"`
 }
 
@@ -82,13 +82,13 @@ func (s *Style) Encode(enc *encoding.MapfileEncoder) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenStringer("SYMBOL", s.Symbol); err != nil {
+	if err = enc.TokenUnion("SYMBOL", s.Symbol); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("SIZE", s.Size); err != nil {
+	if err = enc.TokenUnion("SIZE", s.Size); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("WIDTH", s.Width); err != nil {
+	if err = enc.TokenUnion("WIDTH", s.Width); err != nil {
 		return
 	}
 	if err = enc.TokenStringer("GEOMTRANSFORM", s.GeomTransform); err != nil {

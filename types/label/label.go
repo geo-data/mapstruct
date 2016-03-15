@@ -11,7 +11,7 @@ import (
 
 type Label struct {
 	Type     types.Keyword  `json:",omitempty"`
-	Size     fmt.Stringer   `json:",omitempty"`
+	Size     types.Union    `json:",omitempty"`
 	Font     types.String   `json:",omitempty"`
 	Color    *color.Color   `json:",omitempty"`
 	Position types.Keyword  `json:",omitempty"`
@@ -82,7 +82,7 @@ func (l *Label) Encode(enc *encoding.MapfileEncoder) (err error) {
 	if err = enc.TokenStringer("TYPE", l.Type); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("SIZE", l.Size); err != nil {
+	if err = enc.TokenUnion("SIZE", l.Size); err != nil {
 		return
 	}
 	if err = enc.TokenStringer("FONT", l.Font); err != nil {

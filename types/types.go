@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+type Union interface{}
+
 type String string
 
 type Attribute string

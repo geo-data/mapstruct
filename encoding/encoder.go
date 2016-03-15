@@ -2,6 +2,7 @@ package encoding
 
 import (
 	"fmt"
+	"github.com/geo-data/mapfile/types"
 	"io"
 	"regexp"
 	"strings"
@@ -62,6 +63,32 @@ func (e *MapfileEncoder) TokenStringer(name string, value fmt.Stringer) (err err
 	return e.TokenString(name, value.String())
 }
 
+func (e *MapfileEncoder) TokenUnion(name string, value types.Union) (err error) {
+	var s string
+	switch t := value.(type) {
+	case nil:
+		return // Don't encode.
+	case types.Float64:
+		s = fmt.Stringer(t).String()
+	case types.String:
+		s = fmt.Stringer(t).String()
+	case types.Attribute:
+		s = fmt.Stringer(t).String()
+	case types.Keyword:
+		s = fmt.Stringer(t).String()
+	case types.Uint8:
+		s = fmt.Stringer(t).String()
+	case types.Integer:
+		s = fmt.Stringer(t).String()
+	case types.Uint32:
+		s = fmt.Stringer(t).String()
+	default:
+		err = fmt.Errorf("unhandled type: %v", t)
+		return
+	}
+	return e.TokenString(name, s)
+}
+
 func (e *MapfileEncoder) EncodeString(value fmt.Stringer) (err error) {
 	s := value.String()
 	if s == "" {
@@ -80,7 +107,7 @@ func (e *MapfileEncoder) EncodeString(value fmt.Stringer) (err error) {
 	return
 }
 
-func (e *MapfileEncoder) EncodeValues(values ...fmt.Stringer) (err error) {
+func (e *MapfileEncoder) EncodeStringers(values ...fmt.Stringer) (err error) {
 	if len(values) == 0 {
 		return
 	}
@@ -102,10 +129,6 @@ func (e *MapfileEncoder) EncodeValues(values ...fmt.Stringer) (err error) {
 	}
 
 	return
-}
-
-func (e *MapfileEncoder) EncodeStrings(values ...fmt.Stringer) (err error) {
-	return e.EncodeValues(values...)
 }
 
 func (e *MapfileEncoder) TokenStart(name string) (err error) {

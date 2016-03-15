@@ -62,7 +62,7 @@ func (p *Metadata) Encode(enc *encoding.MapfileEncoder) (err error) {
 	}
 
 	for k, v := range p.kvmap {
-		if err = enc.EncodeStrings(k, v); err != nil {
+		if err = enc.EncodeStringers(k, v); err != nil {
 			return
 		}
 	}

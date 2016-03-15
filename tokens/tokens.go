@@ -58,34 +58,34 @@ func (t Type) String() string {
 	return strings.Join(types, ", ")
 }
 
-func (t *Tokens) Decode(types Type) (fmt.Stringer, error) {
-	if types.Is(INTEGER) {
+func (t *Tokens) Decode(kinds Type) (types.Union, error) {
+	if kinds.Is(INTEGER) {
 		if v, err := t.Integer(); err == nil {
-			return v, nil
+			return types.Union(v), nil
 		}
 	}
-	if types.Is(FLOAT64) {
+	if kinds.Is(FLOAT64) {
 		if v, err := t.Float64(); err == nil {
-			return v, nil
+			return types.Union(v), nil
 		}
 	}
-	if types.Is(STRING) {
+	if kinds.Is(STRING) {
 		if v, err := t.String(); err == nil {
-			return v, nil
+			return types.Union(v), nil
 		}
 	}
-	if types.Is(KEYWORD) {
+	if kinds.Is(KEYWORD) {
 		if v, err := t.Keyword(); err == nil {
-			return v, nil
+			return types.Union(v), nil
 		}
 	}
-	if types.Is(ATTRIBUTE) {
+	if kinds.Is(ATTRIBUTE) {
 		if v, err := t.Attribute(); err == nil {
-			return v, nil
+			return types.Union(v), nil
 		}
 	}
 
-	return nil, fmt.Errorf("decode failed, expected one of %s: %s", types, t.Value())
+	return nil, fmt.Errorf("decode failed, expected one of %s: %s", kinds, t.Value())
 }
 
 func (t *Tokens) Attribute() (attr types.Attribute, err error) {

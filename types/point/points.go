@@ -76,7 +76,7 @@ func (p *Points) Encode(enc *encoding.MapfileEncoder) (err error) {
 		points = append(points, point)
 	}
 
-	if err = enc.EncodeValues(points...); err != nil {
+	if err = enc.EncodeStringers(points...); err != nil {
 		return
 	}
 
