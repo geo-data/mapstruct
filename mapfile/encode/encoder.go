@@ -3,13 +3,10 @@ package encode
 import (
 	"fmt"
 	"io"
-	"regexp"
 	"strings"
 
 	"github.com/geo-data/mapfile/types"
 )
-
-var isNum = regexp.MustCompile(`-?\d+(\.\d+)?`)
 
 type Encoder struct {
 	w     io.Writer
