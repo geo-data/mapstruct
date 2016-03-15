@@ -2,7 +2,7 @@ package style
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/tokens"
 	"github.com/geo-data/mapfile/types"
 	"github.com/geo-data/mapfile/types/color"
@@ -67,7 +67,7 @@ func New(toks *tokens.Tokens) (s *Style, err error) {
 	return
 }
 
-func (s *Style) Encode(enc *encoding.MapfileEncoder) (err error) {
+func (s *Style) Encode(enc *encode.MapfileEncoder) (err error) {
 	if err = enc.TokenStart("STYLE"); err != nil {
 		return
 	}

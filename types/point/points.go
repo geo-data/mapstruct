@@ -3,7 +3,7 @@ package point
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/tokens"
 	"github.com/geo-data/mapfile/types"
 )
@@ -66,7 +66,7 @@ func (p *Points) MarshalJSON() ([]byte, error) {
 	return json.Marshal(p.points)
 }
 
-func (p *Points) Encode(enc *encoding.MapfileEncoder) (err error) {
+func (p *Points) Encode(enc *encode.MapfileEncoder) (err error) {
 	if err = enc.TokenStart("POINTS"); err != nil {
 		return
 	}

@@ -2,7 +2,7 @@ package class
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/tokens"
 	"github.com/geo-data/mapfile/types"
 	"github.com/geo-data/mapfile/types/label"
@@ -75,7 +75,7 @@ func New(toks *tokens.Tokens) (c *Class, err error) {
 	return
 }
 
-func (c *Class) Encode(enc *encoding.MapfileEncoder) (err error) {
+func (c *Class) Encode(enc *encode.MapfileEncoder) (err error) {
 	if err = enc.TokenStart("CLASS"); err != nil {
 		return
 	}

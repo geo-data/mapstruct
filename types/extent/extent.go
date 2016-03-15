@@ -3,7 +3,7 @@ package extent
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/tokens"
 	"github.com/geo-data/mapfile/types"
 	"github.com/geo-data/mapfile/types/point"
@@ -38,6 +38,6 @@ func (e *Extent) String() string {
 	return fmt.Sprintf("%s %s %s %s", e.Min.X, e.Min.Y, e.Max.X, e.Max.Y)
 }
 
-func (e *Extent) Encode(enc *encoding.MapfileEncoder) error {
+func (e *Extent) Encode(enc *encode.MapfileEncoder) error {
 	return enc.TokenStringer("EXTENT", e)
 }

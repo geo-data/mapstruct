@@ -2,7 +2,7 @@ package feature
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/tokens"
 	"github.com/geo-data/mapfile/types"
 	"github.com/geo-data/mapfile/types/point"
@@ -56,7 +56,7 @@ func New(toks *tokens.Tokens) (c *Feature, err error) {
 	return
 }
 
-func (c *Feature) Encode(enc *encoding.MapfileEncoder) (err error) {
+func (c *Feature) Encode(enc *encode.MapfileEncoder) (err error) {
 	if err = enc.TokenStart("FEATURE"); err != nil {
 		return
 	}

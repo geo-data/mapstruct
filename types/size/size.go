@@ -2,7 +2,7 @@ package size
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/tokens"
 	"github.com/geo-data/mapfile/types"
 )
@@ -28,6 +28,6 @@ func (s *Size) String() string {
 	return fmt.Sprintf("%s %s", s.Width, s.Height)
 }
 
-func (s *Size) Encode(enc *encoding.MapfileEncoder) error {
+func (s *Size) Encode(enc *encode.MapfileEncoder) error {
 	return enc.TokenStringer("SIZE", s)
 }

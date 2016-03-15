@@ -2,7 +2,7 @@ package scalebar
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/tokens"
 	"github.com/geo-data/mapfile/types"
 	"github.com/geo-data/mapfile/types/color"
@@ -93,7 +93,7 @@ func New(toks *tokens.Tokens) (s *Scalebar, err error) {
 	return
 }
 
-func (s *Scalebar) Encode(enc *encoding.MapfileEncoder) (err error) {
+func (s *Scalebar) Encode(enc *encode.MapfileEncoder) (err error) {
 	if err = enc.TokenStart("SCALEBAR"); err != nil {
 		return
 	}

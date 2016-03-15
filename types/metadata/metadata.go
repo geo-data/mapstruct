@@ -3,7 +3,7 @@ package metadata
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/tokens"
 	"github.com/geo-data/mapfile/types"
 )
@@ -56,7 +56,7 @@ func New(toks *tokens.Tokens) (m *Metadata, err error) {
 	return
 }
 
-func (p *Metadata) Encode(enc *encoding.MapfileEncoder) (err error) {
+func (p *Metadata) Encode(enc *encode.MapfileEncoder) (err error) {
 	if err = enc.TokenStart("METADATA"); err != nil {
 		return
 	}

@@ -2,7 +2,7 @@ package layer
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/tokens"
 	"github.com/geo-data/mapfile/types"
 	"github.com/geo-data/mapfile/types/class"
@@ -109,7 +109,7 @@ func New(toks *tokens.Tokens) (l *Layer, err error) {
 	return
 }
 
-func (l *Layer) Encode(enc *encoding.MapfileEncoder) (err error) {
+func (l *Layer) Encode(enc *encode.MapfileEncoder) (err error) {
 	if err = enc.TokenStart("LAYER"); err != nil {
 		return
 	}

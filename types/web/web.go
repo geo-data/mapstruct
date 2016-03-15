@@ -2,7 +2,7 @@ package web
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/types/metadata"
 	"github.com/geo-data/mapfile/tokens"
 )
@@ -40,7 +40,7 @@ func New(toks *tokens.Tokens) (w *Web, err error) {
 	return
 }
 
-func (w *Web) Encode(enc *encoding.MapfileEncoder) (err error) {
+func (w *Web) Encode(enc *encode.MapfileEncoder) (err error) {
 	if err = enc.TokenStart("WEB"); err != nil {
 		return
 	}

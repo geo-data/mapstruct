@@ -1,11 +1,12 @@
-package encoding
+package encode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/types"
 	"io"
 	"regexp"
 	"strings"
+
+	"github.com/geo-data/mapfile/types"
 )
 
 type Encoder interface {

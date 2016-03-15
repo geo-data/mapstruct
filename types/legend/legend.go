@@ -2,7 +2,7 @@ package legend
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/encoding"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/types/color"
 	"github.com/geo-data/mapfile/tokens"
 )
@@ -40,7 +40,7 @@ func New(tokens *tokens.Tokens) (l *Legend, err error) {
 	return
 }
 
-func (l *Legend) Encode(enc *encoding.MapfileEncoder) (err error) {
+func (l *Legend) Encode(enc *encode.MapfileEncoder) (err error) {
 	if err = enc.TokenStart("LEGEND"); err != nil {
 		return
 	}
