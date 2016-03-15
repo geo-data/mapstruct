@@ -9,6 +9,13 @@ type Extent struct {
 	Min, Max *Point
 }
 
+func NewExtent(minx, miny, maxx, maxy float64) *Extent {
+	return &Extent{
+		Min: NewPoint(minx, miny),
+		Max: NewPoint(maxx, maxy),
+	}
+}
+
 func (e *Extent) MarshalJSON() ([]byte, error) {
 	a := []Double{
 		e.Min.X,
