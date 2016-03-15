@@ -1,9 +1,7 @@
 package label
 
 import (
-	"fmt"
 	"github.com/geo-data/mapfile/mapfile/encode"
-	"github.com/geo-data/mapfile/mapfile/decode/tokens"
 	"github.com/geo-data/mapfile/types"
 	"github.com/geo-data/mapfile/types/color"
 	"github.com/geo-data/mapfile/types/style"
@@ -17,61 +15,6 @@ type Label struct {
 	Position types.Keyword  `json:",omitempty"`
 	Buffer   types.Uint32   `json:",omitempty"`
 	Styles   []*style.Style `json:",omitempty"`
-}
-
-func New(toks *tokens.Tokens) (l *Label, err error) {
-	token := toks.Value()
-	if token != "LABEL" {
-		err = fmt.Errorf("expected token LABEL, got: %s", token)
-		return
-	}
-	toks.Next()
-
-	l = new(Label)
-	for toks != nil {
-		token := toks.Value()
-		switch token {
-		case "TYPE":
-			if l.Type, err = toks.Next().Keyword(); err != nil {
-				return
-			}
-		case "SIZE":
-			if l.Size, err = toks.Next().Decode(tokens.Double | tokens.Keyword | tokens.Attribute); err != nil {
-				return
-			}
-		case "FONT":
-			if l.Font, err = toks.Next().String(); err != nil {
-				return
-			}
-		case "BUFFER":
-			if l.Buffer, err = toks.Next().Uint32(); err != nil {
-				return
-			}
-		case "POSITION":
-			if l.Position, err = toks.Next().Keyword(); err != nil {
-				return
-			}
-		case "COLOR":
-			if l.Color, err = color.New(toks); err != nil {
-				return
-			}
-		case "STYLE":
-			var s *style.Style
-			if s, err = style.New(toks); err != nil {
-				return
-			}
-			l.Styles = append(l.Styles, s)
-		case "END":
-			return
-		default:
-			err = fmt.Errorf("unhandled mapfile token: %s", token)
-			return
-		}
-
-		toks = toks.Next()
-	}
-
-	return
 }
 
 func (l *Label) Encode(enc *encode.MapfileEncoder) (err error) {

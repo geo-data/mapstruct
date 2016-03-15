@@ -1,10 +1,7 @@
 package mapobj
 
 import (
-	"fmt"
-
 	"github.com/geo-data/mapfile/mapfile/encode"
-	"github.com/geo-data/mapfile/mapfile/decode/tokens"
 	"github.com/geo-data/mapfile/types"
 	"github.com/geo-data/mapfile/types/color"
 	"github.com/geo-data/mapfile/types/extent"
@@ -17,99 +14,19 @@ import (
 )
 
 type Map struct {
-	Name       types.String           `json:",omitempty"`
-	Extent     *extent.Extent         `json:",omitempty"`
-	ImageType  types.String           `json:",omitempty"`
-	ImageColor *color.Color           `json:",omitempty"`
-	Status     types.Keyword          `json:",omitempty"`
-	Size       *size.Size             `json:",omitempty"`
-	Fontset    types.String           `json:",omitempty"`
-	Symbolset  types.String           `json:",omitempty"`
-	Legend     *legend.Legend         `json:",omitempty"`
-	Scalebar   *scalebar.Scalebar     `json:",omitempty"`
-	Web        *web.Web               `json:",omitempty"`
-	Projection *projection.Projection `json:",omitempty"`
-	Layers     []*layer.Layer         `json:",omitempty"`
-}
-
-func New(toks *tokens.Tokens) (m *Map, err error) {
-	token := toks.Value()
-	if token != "MAP" {
-		err = fmt.Errorf("expected token MAP, got: %s", token)
-		return
-	}
-	toks.Next()
-
-	m = new(Map)
-
-	for toks != nil {
-		token = toks.Value()
-		switch token {
-		case "IMAGETYPE":
-			if m.ImageType, err = toks.Next().String(); err != nil {
-				return
-			}
-		case "NAME":
-			if m.Name, err = toks.Next().String(); err != nil {
-				return
-			}
-		case "STATUS":
-			if m.Status, err = toks.Next().Keyword(); err != nil {
-				return
-			}
-		case "FONTSET":
-			if m.Fontset, err = toks.Next().String(); err != nil {
-				return
-			}
-		case "SYMBOLSET":
-			if m.Symbolset, err = toks.Next().String(); err != nil {
-				return
-			}
-		case "EXTENT":
-			if m.Extent, err = extent.New(toks); err != nil {
-				return
-			}
-		case "IMAGECOLOR":
-			if m.ImageColor, err = color.New(toks); err != nil {
-				return
-			}
-		case "SIZE":
-			if m.Size, err = size.New(toks); err != nil {
-				return
-			}
-		case "SCALEBAR":
-			if m.Scalebar, err = scalebar.New(toks); err != nil {
-				return
-			}
-		case "LEGEND":
-			if m.Legend, err = legend.New(toks); err != nil {
-				return
-			}
-		case "PROJECTION":
-			if m.Projection, err = projection.New(toks); err != nil {
-				return
-			}
-		case "WEB":
-			if m.Web, err = web.New(toks); err != nil {
-				return
-			}
-		case "LAYER":
-			var l *layer.Layer
-			if l, err = layer.New(toks); err != nil {
-				return
-			}
-			m.Layers = append(m.Layers, l)
-		case "END":
-			return
-		default:
-			err = fmt.Errorf("unhandled mapfile token: %s", token)
-			return
-		}
-
-		toks = toks.Next()
-	}
-
-	return
+	Name       types.String          `json:",omitempty"`
+	Extent     *extent.Extent        `json:",omitempty"`
+	ImageType  types.String          `json:",omitempty"`
+	ImageColor *color.Color          `json:",omitempty"`
+	Status     types.Keyword         `json:",omitempty"`
+	Size       *size.Size            `json:",omitempty"`
+	Fontset    types.String          `json:",omitempty"`
+	Symbolset  types.String          `json:",omitempty"`
+	Legend     *legend.Legend        `json:",omitempty"`
+	Scalebar   *scalebar.Scalebar    `json:",omitempty"`
+	Web        *web.Web              `json:",omitempty"`
+	Projection projection.Projection `json:",omitempty"`
+	Layers     []*layer.Layer        `json:",omitempty"`
 }
 
 func (m *Map) Encode(enc *encode.MapfileEncoder) (err error) {

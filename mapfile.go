@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/mapfile/decode/tokens"
+	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/types/mapobj"
 )
 
@@ -19,7 +19,7 @@ func main() {
 	}
 
 	var map_ *mapobj.Map
-	if map_, err = mapobj.New(tokens); err != nil {
+	if map_, err = tokens.Map(); err != nil {
 		panic(err)
 		log.Fatal(err)
 	}

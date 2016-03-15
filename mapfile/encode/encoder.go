@@ -120,11 +120,19 @@ func (e *MapfileEncoder) EncodeStringers(values ...fmt.Stringer) (err error) {
 		}
 	}
 
+	return e.EncodeStrings(svals...)
+}
+
+func (e *MapfileEncoder) EncodeStrings(values ...string) (err error) {
+	if len(values) == 0 {
+		return
+	}
+
 	if err = e.indent(); err != nil {
 		return
 	}
 
-	join := strings.Join(svals, " ")
+	join := strings.Join(values, " ")
 	if _, err = e.w.Write([]byte(fmt.Sprintf("%s\n", join))); err != nil {
 		return
 	}
