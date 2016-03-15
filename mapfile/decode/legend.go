@@ -1,11 +1,11 @@
-package tokens
+package decode
 
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/types/legend"
 )
 
-func (t *Tokens) Legend() (l *legend.Legend, err error) {
+func (t *Decoder) Legend() (l *legend.Legend, err error) {
 	token := t.Value()
 	if token != "LEGEND" {
 		err = fmt.Errorf("expected token LEGEND, got: %s", token)

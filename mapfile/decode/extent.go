@@ -1,11 +1,11 @@
-package tokens
+package decode
 
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/types/extent"
 )
 
-func (t *Tokens) Extent() (e *extent.Extent, err error) {
+func (t *Decoder) Extent() (e *extent.Extent, err error) {
 	token := t.Value()
 	if token != "EXTENT" {
 		err = fmt.Errorf("expected token EXTENT, got: %s", token)

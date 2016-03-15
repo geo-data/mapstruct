@@ -1,4 +1,4 @@
-package tokens
+package decode
 
 import "strings"
 

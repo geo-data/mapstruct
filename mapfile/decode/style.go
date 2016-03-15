@@ -1,11 +1,11 @@
-package tokens
+package decode
 
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/types/style"
 )
 
-func (t *Tokens) Style() (s *style.Style, err error) {
+func (t *Decoder) Style() (s *style.Style, err error) {
 	token := t.Value()
 	if token != "STYLE" {
 		err = fmt.Errorf("expected token STYLE, got: %s", token)

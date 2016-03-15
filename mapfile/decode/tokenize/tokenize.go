@@ -1,4 +1,4 @@
-package tokens
+package tokenize
 
 /*
 #cgo CFLAGS: -I/home/hrz/tmp/mapserver/include -I/usr/include/gdal/
@@ -12,7 +12,7 @@ import (
 	"unsafe"
 )
 
-func msTokenizeMap(filename string) (tokens []string, err error) {
+func TokenizeMapfile(filename string) (tokens []string, err error) {
 	cfilename := C.CString(filename)
 	defer C.free(unsafe.Pointer(cfilename))
 
@@ -34,17 +34,5 @@ func msTokenizeMap(filename string) (tokens []string, err error) {
 		}
 	}
 
-	return
-}
-
-func TokenizeMap(filename string) (tokens *Tokens, err error) {
-	var toks []string
-	if toks, err = msTokenizeMap(filename); err != nil {
-		return
-	}
-
-	tokens = &Tokens{
-		tokens: toks,
-	}
 	return
 }

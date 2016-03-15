@@ -1,8 +1,8 @@
-package tokens
+package decode
 
 import "github.com/geo-data/mapfile/types/color"
 
-func (t *Tokens) Color() (c *color.Color, err error) {
+func (t *Decoder) Color() (c *color.Color, err error) {
 	c = new(color.Color)
 	if c.R, err = t.Next().Uint8(); err != nil {
 		return

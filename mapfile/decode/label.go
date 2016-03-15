@@ -1,4 +1,4 @@
-package tokens
+package decode
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/geo-data/mapfile/types/style"
 )
 
-func (t *Tokens) Label() (l *label.Label, err error) {
+func (t *Decoder) Label() (l *label.Label, err error) {
 	token := t.Value()
 	if token != "LABEL" {
 		err = fmt.Errorf("expected token LABEL, got: %s", token)

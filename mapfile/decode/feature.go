@@ -1,11 +1,11 @@
-package tokens
+package decode
 
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/types/feature"
 )
 
-func (t *Tokens) Feature() (c *feature.Feature, err error) {
+func (t *Decoder) Feature() (c *feature.Feature, err error) {
 	token := t.Value()
 	if token != "FEATURE" {
 		err = fmt.Errorf("expected token FEATURE, got: %s", token)

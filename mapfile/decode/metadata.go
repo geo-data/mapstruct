@@ -1,4 +1,4 @@
-package tokens
+package decode
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/geo-data/mapfile/types/metadata"
 )
 
-func (t *Tokens) Metadata() (m metadata.Metadata, err error) {
+func (t *Decoder) Metadata() (m metadata.Metadata, err error) {
 	token := t.Value()
 	if token != "METADATA" {
 		err = fmt.Errorf("expected token METADATA, got: %s", token)

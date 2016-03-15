@@ -1,11 +1,11 @@
-package tokens
+package decode
 
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/types/scalebar"
 )
 
-func (t *Tokens) Scalebar() (s *scalebar.Scalebar, err error) {
+func (t *Decoder) Scalebar() (s *scalebar.Scalebar, err error) {
 	token := t.Value()
 	if token != "SCALEBAR" {
 		err = fmt.Errorf("expected token SCALEBAR, got: %s", token)

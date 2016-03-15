@@ -6,21 +6,20 @@ import (
 	"log"
 	"os"
 
-	"github.com/geo-data/mapfile/mapfile/decode/tokens"
+	"github.com/geo-data/mapfile/mapfile/decode"
 	"github.com/geo-data/mapfile/mapfile/encode"
 	"github.com/geo-data/mapfile/types/mapobj"
 )
 
 func main() {
 	mapfile := os.Args[1]
-	tokens, err := tokens.TokenizeMap(mapfile)
+	dec, err := decode.DecodeMapfile(mapfile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var map_ *mapobj.Map
-	if map_, err = tokens.Map(); err != nil {
-		panic(err)
+	if map_, err = dec.Map(); err != nil {
 		log.Fatal(err)
 	}
 

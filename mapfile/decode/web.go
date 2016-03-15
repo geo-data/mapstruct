@@ -1,11 +1,11 @@
-package tokens
+package decode
 
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/types/web"
 )
 
-func (t *Tokens) Web() (w *web.Web, err error) {
+func (t *Decoder) Web() (w *web.Web, err error) {
 	token := t.Value()
 	if token != "WEB" {
 		err = fmt.Errorf("expected token WEB, got: %s", token)

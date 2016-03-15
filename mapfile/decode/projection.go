@@ -1,4 +1,4 @@
-package tokens
+package decode
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/geo-data/mapfile/types/projection"
 )
 
-func (t *Tokens) Projection() (p projection.Projection, err error) {
+func (t *Decoder) Projection() (p projection.Projection, err error) {
 	token := t.Value()
 	if token != "PROJECTION" {
 		err = fmt.Errorf("expected token PROJECTION, got: %s", token)

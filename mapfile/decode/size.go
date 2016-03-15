@@ -1,11 +1,11 @@
-package tokens
+package decode
 
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/types/size"
 )
 
-func (t *Tokens) Size() (s *size.Size, err error) {
+func (t *Decoder) Size() (s *size.Size, err error) {
 	token := t.Value()
 	if token != "SIZE" {
 		err = fmt.Errorf("expected token SIZE, got: %s", token)

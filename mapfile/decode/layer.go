@@ -1,4 +1,4 @@
-package tokens
+package decode
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"github.com/geo-data/mapfile/types/layer"
 )
 
-func (t *Tokens) Layer() (l *layer.Layer, err error) {
+func (t *Decoder) Layer() (l *layer.Layer, err error) {
 	token := t.Value()
 	if token != "LAYER" {
 		err = fmt.Errorf("expected token LAYER, got: %s", token)

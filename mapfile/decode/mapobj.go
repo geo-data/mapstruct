@@ -1,4 +1,4 @@
-package tokens
+package decode
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/geo-data/mapfile/types/mapobj"
 )
 
-func (t *Tokens) Map() (m *mapobj.Map, err error) {
+func (t *Decoder) Map() (m *mapobj.Map, err error) {
 	token := t.Value()
 	if token != "MAP" {
 		err = fmt.Errorf("expected token MAP, got: %s", token)
