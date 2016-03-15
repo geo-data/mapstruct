@@ -9,9 +9,10 @@ import (
 )
 
 type Encoder struct {
-	w     io.Writer
-	r     *strings.Replacer
-	depth int
+	w      io.Writer
+	r      *strings.Replacer
+	depth  int
+	Indent string
 }
 
 func NewEncoder(w io.Writer) *Encoder {
@@ -19,12 +20,13 @@ func NewEncoder(w io.Writer) *Encoder {
 		w,
 		strings.NewReplacer(`\`, `\\`, `"`, `\"`),
 		0,
+		"  ",
 	}
 }
 
 func (e *Encoder) indent() error {
 	for i := 0; i < e.depth; i++ {
-		if _, err := e.w.Write([]byte("  ")); err != nil {
+		if _, err := e.w.Write([]byte(e.Indent)); err != nil {
 			return err
 		}
 	}
