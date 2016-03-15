@@ -20,7 +20,7 @@ type Integer int64
 
 type Uint32 uint32
 
-type Float64 float64
+type Double float64
 
 func (a Attribute) String() string {
 	attr := string(a)
@@ -68,6 +68,6 @@ func (t Uint32) String() string {
 }
 
 // String implements fmt.Stringer()
-func (t Float64) String() string {
+func (t Double) String() string {
 	return strconv.FormatFloat(float64(t), 'f', -1, 64)
 }

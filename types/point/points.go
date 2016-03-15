@@ -9,16 +9,16 @@ import (
 )
 
 type Point struct {
-	X, Y types.Float64
+	X, Y types.Double
 }
 
 func NewPoint(tokens *tokens.Tokens) (p *Point, err error) {
 	p = new(Point)
-	if p.X, err = tokens.Float64(); err != nil {
+	if p.X, err = tokens.Double(); err != nil {
 		return
 	}
 
-	if p.Y, err = tokens.Next().Float64(); err != nil {
+	if p.Y, err = tokens.Next().Double(); err != nil {
 		return
 	}
 
@@ -30,7 +30,7 @@ func (p *Point) String() string {
 }
 
 func (p *Point) MarshalJSON() ([]byte, error) {
-	return json.Marshal([]types.Float64{p.X, p.Y})
+	return json.Marshal([]types.Double{p.X, p.Y})
 }
 
 type Points struct {

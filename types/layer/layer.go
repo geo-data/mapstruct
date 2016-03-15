@@ -53,7 +53,7 @@ func New(toks *tokens.Tokens) (l *Layer, err error) {
 				return
 			}
 		case "DEBUG":
-			if l.Debug, err = toks.Next().Decode(tokens.KEYWORD | tokens.INTEGER); err != nil {
+			if l.Debug, err = toks.Next().Decode(tokens.Keyword | tokens.Integer); err != nil {
 				return
 			}
 		case "PROJECTION":

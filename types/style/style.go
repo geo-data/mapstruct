@@ -38,15 +38,15 @@ func New(toks *tokens.Tokens) (s *Style, err error) {
 				return
 			}
 		case "SYMBOL":
-			if s.Symbol, err = toks.Next().Decode(tokens.INTEGER | tokens.STRING | tokens.ATTRIBUTE); err != nil {
+			if s.Symbol, err = toks.Next().Decode(tokens.Integer | tokens.String | tokens.Attribute); err != nil {
 				return
 			}
 		case "SIZE":
-			if s.Size, err = toks.Next().Decode(tokens.FLOAT64 | tokens.ATTRIBUTE); err != nil {
+			if s.Size, err = toks.Next().Decode(tokens.Double | tokens.Attribute); err != nil {
 				return
 			}
 		case "WIDTH":
-			if s.Width, err = toks.Next().Decode(tokens.STRING | tokens.FLOAT64); err != nil {
+			if s.Width, err = toks.Next().Decode(tokens.String | tokens.Double); err != nil {
 				err = fmt.Errorf("could not decode WIDTH: %s", err)
 				return
 			}

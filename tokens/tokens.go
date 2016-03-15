@@ -26,11 +26,11 @@ func (t *Tokens) Value() string {
 type Type int
 
 const (
-	ATTRIBUTE = 1 << iota
-	STRING
-	FLOAT64
-	INTEGER
-	KEYWORD
+	Attribute = 1 << iota
+	String
+	Double
+	Integer
+	Keyword
 )
 
 func (t Type) Is(t2 Type) bool {
@@ -39,19 +39,19 @@ func (t Type) Is(t2 Type) bool {
 
 func (t Type) String() string {
 	types := []string{}
-	if t.Is(ATTRIBUTE) {
+	if t.Is(Attribute) {
 		types = append(types, "Attribute")
 	}
-	if t.Is(STRING) {
+	if t.Is(String) {
 		types = append(types, "String")
 	}
-	if t.Is(FLOAT64) {
+	if t.Is(Double) {
 		types = append(types, "Double")
 	}
-	if t.Is(INTEGER) {
+	if t.Is(Integer) {
 		types = append(types, "Integer")
 	}
-	if t.Is(KEYWORD) {
+	if t.Is(Keyword) {
 		types = append(types, "Keyword")
 	}
 
@@ -59,27 +59,27 @@ func (t Type) String() string {
 }
 
 func (t *Tokens) Decode(kinds Type) (types.Union, error) {
-	if kinds.Is(INTEGER) {
+	if kinds.Is(Integer) {
 		if v, err := t.Integer(); err == nil {
 			return types.Union(v), nil
 		}
 	}
-	if kinds.Is(FLOAT64) {
-		if v, err := t.Float64(); err == nil {
+	if kinds.Is(Double) {
+		if v, err := t.Double(); err == nil {
 			return types.Union(v), nil
 		}
 	}
-	if kinds.Is(STRING) {
+	if kinds.Is(String) {
 		if v, err := t.String(); err == nil {
 			return types.Union(v), nil
 		}
 	}
-	if kinds.Is(KEYWORD) {
+	if kinds.Is(Keyword) {
 		if v, err := t.Keyword(); err == nil {
 			return types.Union(v), nil
 		}
 	}
-	if kinds.Is(ATTRIBUTE) {
+	if kinds.Is(Attribute) {
 		if v, err := t.Attribute(); err == nil {
 			return types.Union(v), nil
 		}
@@ -149,13 +149,13 @@ func (t *Tokens) Integer() (i types.Integer, err error) {
 	return
 }
 
-func (t *Tokens) Float64() (f types.Float64, err error) {
+func (t *Tokens) Double() (f types.Double, err error) {
 	var tf float64
 	if tf, err = strconv.ParseFloat(t.Value(), 64); err != nil {
 		return
 	}
 
-	f = types.Float64(tf)
+	f = types.Double(tf)
 	return
 }
 

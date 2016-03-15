@@ -25,7 +25,7 @@ func New(tokens *tokens.Tokens) (e *Extent, err error) {
 }
 
 func (e *Extent) MarshalJSON() ([]byte, error) {
-	a := []types.Float64{
+	a := []types.Double{
 		e.Min.X,
 		e.Min.Y,
 		e.Max.X,

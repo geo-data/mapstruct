@@ -36,7 +36,7 @@ func New(toks *tokens.Tokens) (l *Label, err error) {
 				return
 			}
 		case "SIZE":
-			if l.Size, err = toks.Next().Decode(tokens.FLOAT64 | tokens.KEYWORD | tokens.ATTRIBUTE); err != nil {
+			if l.Size, err = toks.Next().Decode(tokens.Double | tokens.Keyword | tokens.Attribute); err != nil {
 				return
 			}
 		case "FONT":

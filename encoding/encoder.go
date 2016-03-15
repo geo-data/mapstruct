@@ -68,7 +68,7 @@ func (e *MapfileEncoder) TokenUnion(name string, value types.Union) (err error) 
 	switch t := value.(type) {
 	case nil:
 		return // Don't encode.
-	case types.Float64:
+	case types.Double:
 		s = fmt.Stringer(t).String()
 	case types.String:
 		s = fmt.Stringer(t).String()
