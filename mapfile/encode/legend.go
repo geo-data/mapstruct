@@ -2,7 +2,7 @@ package encode
 
 import "github.com/geo-data/mapfile/types/legend"
 
-func (enc *MapfileEncoder) EncodeLegend(l *legend.Legend) (err error) {
+func (enc *Encoder) EncodeLegend(l *legend.Legend) (err error) {
 	if err = enc.TokenStart("LEGEND"); err != nil {
 		return
 	}

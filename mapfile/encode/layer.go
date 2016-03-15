@@ -2,7 +2,7 @@ package encode
 
 import "github.com/geo-data/mapfile/types/layer"
 
-func (enc *MapfileEncoder) EncodeLayer(l *layer.Layer) (err error) {
+func (enc *Encoder) EncodeLayer(l *layer.Layer) (err error) {
 	if err = enc.TokenStart("LAYER"); err != nil {
 		return
 	}

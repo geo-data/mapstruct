@@ -2,7 +2,7 @@ package encode
 
 import "github.com/geo-data/mapfile/types/mapobj"
 
-func (enc *MapfileEncoder) EncodeMap(m *mapobj.Map) (err error) {
+func (enc *Encoder) EncodeMap(m *mapobj.Map) (err error) {
 	if err = enc.TokenStart("MAP"); err != nil {
 		return
 	}

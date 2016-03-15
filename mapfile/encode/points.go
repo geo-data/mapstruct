@@ -5,7 +5,7 @@ import (
 	"github.com/geo-data/mapfile/types/point"
 )
 
-func (enc *MapfileEncoder) EncodePoints(p point.Points) (err error) {
+func (enc *Encoder) EncodePoints(p point.Points) (err error) {
 	if err = enc.TokenStart("POINTS"); err != nil {
 		return
 	}

@@ -9,31 +9,23 @@ import (
 	"github.com/geo-data/mapfile/types"
 )
 
-type Encoder interface {
-	Encode(*MapfileEncoder) error
-}
-
 var isNum = regexp.MustCompile(`-?\d+(\.\d+)?`)
 
-type MapfileEncoder struct {
+type Encoder struct {
 	w     io.Writer
 	r     *strings.Replacer
 	depth int
 }
 
-func NewMapfileEncoder(w io.Writer) *MapfileEncoder {
-	return &MapfileEncoder{
+func NewEncoder(w io.Writer) *Encoder {
+	return &Encoder{
 		w,
 		strings.NewReplacer(`\`, `\\`, `"`, `\"`),
 		0,
 	}
 }
 
-func (e *MapfileEncoder) Encode(m Encoder) error {
-	return m.Encode(e)
-}
-
-func (e *MapfileEncoder) indent() error {
+func (e *Encoder) indent() error {
 	for i := 0; i < e.depth; i++ {
 		if _, err := e.w.Write([]byte("  ")); err != nil {
 			return err
@@ -43,7 +35,7 @@ func (e *MapfileEncoder) indent() error {
 	return nil
 }
 
-func (e *MapfileEncoder) TokenString(name string, value string) (err error) {
+func (e *Encoder) TokenString(name string, value string) (err error) {
 	if value == "" {
 		return
 	}
@@ -56,7 +48,7 @@ func (e *MapfileEncoder) TokenString(name string, value string) (err error) {
 	return
 }
 
-func (e *MapfileEncoder) TokenStringer(name string, value fmt.Stringer) (err error) {
+func (e *Encoder) TokenStringer(name string, value fmt.Stringer) (err error) {
 	if value == nil {
 		return
 	}
@@ -64,7 +56,7 @@ func (e *MapfileEncoder) TokenStringer(name string, value fmt.Stringer) (err err
 	return e.TokenString(name, value.String())
 }
 
-func (e *MapfileEncoder) TokenUnion(name string, value types.Union) (err error) {
+func (e *Encoder) TokenUnion(name string, value types.Union) (err error) {
 	var s string
 	switch t := value.(type) {
 	case nil:
@@ -90,7 +82,7 @@ func (e *MapfileEncoder) TokenUnion(name string, value types.Union) (err error) 
 	return e.TokenString(name, s)
 }
 
-func (e *MapfileEncoder) EncodeString(value fmt.Stringer) (err error) {
+func (e *Encoder) EncodeString(value fmt.Stringer) (err error) {
 	s := value.String()
 	if s == "" {
 		return
@@ -108,7 +100,7 @@ func (e *MapfileEncoder) EncodeString(value fmt.Stringer) (err error) {
 	return
 }
 
-func (e *MapfileEncoder) EncodeStringers(values ...fmt.Stringer) (err error) {
+func (e *Encoder) EncodeStringers(values ...fmt.Stringer) (err error) {
 	if len(values) == 0 {
 		return
 	}
@@ -123,7 +115,7 @@ func (e *MapfileEncoder) EncodeStringers(values ...fmt.Stringer) (err error) {
 	return e.EncodeStrings(svals...)
 }
 
-func (e *MapfileEncoder) EncodeStrings(values ...string) (err error) {
+func (e *Encoder) EncodeStrings(values ...string) (err error) {
 	if len(values) == 0 {
 		return
 	}
@@ -140,7 +132,7 @@ func (e *MapfileEncoder) EncodeStrings(values ...string) (err error) {
 	return
 }
 
-func (e *MapfileEncoder) TokenStart(name string) (err error) {
+func (e *Encoder) TokenStart(name string) (err error) {
 	if err = e.indent(); err != nil {
 		return
 	}
@@ -154,7 +146,7 @@ func (e *MapfileEncoder) TokenStart(name string) (err error) {
 	return
 }
 
-func (e *MapfileEncoder) TokenEnd() (err error) {
+func (e *Encoder) TokenEnd() (err error) {
 	e.depth--
 
 	if err = e.indent(); err != nil {

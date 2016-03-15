@@ -5,7 +5,7 @@ import (
 	"github.com/geo-data/mapfile/types/projection"
 )
 
-func (enc *MapfileEncoder) EncodeProjection(p projection.Projection) (err error) {
+func (enc *Encoder) EncodeProjection(p projection.Projection) (err error) {
 	if err = enc.TokenStart("PROJECTION"); err != nil {
 		return
 	}

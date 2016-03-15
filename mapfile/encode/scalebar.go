@@ -2,7 +2,7 @@ package encode
 
 import "github.com/geo-data/mapfile/types/scalebar"
 
-func (enc *MapfileEncoder) EncodeScalebar(s *scalebar.Scalebar) (err error) {
+func (enc *Encoder) EncodeScalebar(s *scalebar.Scalebar) (err error) {
 	if err = enc.TokenStart("SCALEBAR"); err != nil {
 		return
 	}

@@ -2,7 +2,7 @@ package encode
 
 import "github.com/geo-data/mapfile/types/style"
 
-func (enc *MapfileEncoder) EncodeStyle(s *style.Style) (err error) {
+func (enc *Encoder) EncodeStyle(s *style.Style) (err error) {
 	if err = enc.TokenStart("STYLE"); err != nil {
 		return
 	}

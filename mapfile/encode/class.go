@@ -2,7 +2,7 @@ package encode
 
 import "github.com/geo-data/mapfile/types/class"
 
-func (enc *MapfileEncoder) EncodeClass(c *class.Class) (err error) {
+func (enc *Encoder) EncodeClass(c *class.Class) (err error) {
 	if err = enc.TokenStart("CLASS"); err != nil {
 		return
 	}

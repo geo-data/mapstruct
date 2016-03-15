@@ -2,7 +2,7 @@ package encode
 
 import "github.com/geo-data/mapfile/types/label"
 
-func (enc *MapfileEncoder) EncodeLabel(l *label.Label) (err error) {
+func (enc *Encoder) EncodeLabel(l *label.Label) (err error) {
 	if err = enc.TokenStart("LABEL"); err != nil {
 		return
 	}

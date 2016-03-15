@@ -5,7 +5,7 @@ import (
 	"github.com/geo-data/mapfile/types/metadata"
 )
 
-func (enc *MapfileEncoder) EncodeMetadata(m metadata.Metadata) (err error) {
+func (enc *Encoder) EncodeMetadata(m metadata.Metadata) (err error) {
 	if err = enc.TokenStart("METADATA"); err != nil {
 		return
 	}

@@ -2,7 +2,7 @@ package encode
 
 import "github.com/geo-data/mapfile/types/web"
 
-func (enc *MapfileEncoder) EncodeWeb(w *web.Web) (err error) {
+func (enc *Encoder) EncodeWeb(w *web.Web) (err error) {
 	if err = enc.TokenStart("WEB"); err != nil {
 		return
 	}

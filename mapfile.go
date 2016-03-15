@@ -33,7 +33,7 @@ func main() {
 	json.Indent(&out, b, "", "  ")*/
 
 	var out bytes.Buffer
-	enc := encode.NewMapfileEncoder(&out)
+	enc := encode.NewEncoder(&out)
 	if err = enc.EncodeMap(map_); err != nil {
 		log.Fatal(err)
 	}
