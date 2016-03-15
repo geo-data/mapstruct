@@ -1,7 +1,7 @@
 package encode
 
-import "github.com/geo-data/mapfile/types/size"
+import "github.com/geo-data/mapfile/types"
 
-func (enc *Encoder) EncodeSize(s *size.Size) error {
+func (enc *Encoder) EncodeSize(s *types.Size) error {
 	return enc.EncodeDirectiveStringer("SIZE", s)
 }

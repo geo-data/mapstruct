@@ -1,8 +1,8 @@
 package encode
 
-import "github.com/geo-data/mapfile/types/scalebar"
+import "github.com/geo-data/mapfile/types"
 
-func (enc *Encoder) EncodeScalebar(s *scalebar.Scalebar) (err error) {
+func (enc *Encoder) EncodeScalebar(s *types.Scalebar) (err error) {
 	if err = enc.StartDirective("SCALEBAR"); err != nil {
 		return
 	}

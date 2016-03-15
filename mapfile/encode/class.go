@@ -1,8 +1,8 @@
 package encode
 
-import "github.com/geo-data/mapfile/types/class"
+import "github.com/geo-data/mapfile/types"
 
-func (enc *Encoder) EncodeClass(c *class.Class) (err error) {
+func (enc *Encoder) EncodeClass(c *types.Class) (err error) {
 	if err = enc.StartDirective("CLASS"); err != nil {
 		return
 	}

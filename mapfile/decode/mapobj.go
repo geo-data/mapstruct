@@ -2,11 +2,10 @@ package decode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/types/layer"
-	"github.com/geo-data/mapfile/types/mapobj"
+	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Map() (m *mapobj.Map, err error) {
+func (t *Decoder) Map() (m *types.Map, err error) {
 	token := t.Value()
 	if token != "MAP" {
 		err = fmt.Errorf("expected token MAP, got: %s", token)
@@ -14,7 +13,7 @@ func (t *Decoder) Map() (m *mapobj.Map, err error) {
 	}
 	t.Next()
 
-	m = new(mapobj.Map)
+	m = new(types.Map)
 
 	for t != nil {
 		token = t.Value()
@@ -68,7 +67,7 @@ func (t *Decoder) Map() (m *mapobj.Map, err error) {
 				return
 			}
 		case "LAYER":
-			var l *layer.Layer
+			var l *types.Layer
 			if l, err = t.Layer(); err != nil {
 				return
 			}

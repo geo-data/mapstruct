@@ -2,11 +2,11 @@ package decode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/types/point"
+	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Point() (p *point.Point, err error) {
-	p = new(point.Point)
+func (t *Decoder) Point() (p *types.Point, err error) {
+	p = new(types.Point)
 	if p.X, err = t.Double(); err != nil {
 		return
 	}
@@ -18,7 +18,7 @@ func (t *Decoder) Point() (p *point.Point, err error) {
 	return
 }
 
-func (t *Decoder) Points() (ps point.Points, err error) {
+func (t *Decoder) Points() (ps types.Points, err error) {
 	token := t.Value()
 	if token != "POINTS" {
 		err = fmt.Errorf("expected token POINTS, got: %s", token)
@@ -31,7 +31,7 @@ func (t *Decoder) Points() (ps point.Points, err error) {
 			break
 		}
 
-		var point *point.Point
+		var point *types.Point
 		if point, err = t.Point(); err != nil {
 			return
 		}

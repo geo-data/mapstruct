@@ -3,10 +3,9 @@ package decode
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/types"
-	"github.com/geo-data/mapfile/types/metadata"
 )
 
-func (t *Decoder) Metadata() (m metadata.Metadata, err error) {
+func (t *Decoder) Metadata() (m types.Metadata, err error) {
 	token := t.Value()
 	if token != "METADATA" {
 		err = fmt.Errorf("expected token METADATA, got: %s", token)
@@ -14,7 +13,7 @@ func (t *Decoder) Metadata() (m metadata.Metadata, err error) {
 	}
 	t.Next()
 
-	m = metadata.New()
+	m = types.NewMetadata()
 
 	for t != nil {
 		var key, value types.String

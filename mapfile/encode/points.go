@@ -2,10 +2,10 @@ package encode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/types/point"
+	"github.com/geo-data/mapfile/types"
 )
 
-func (enc *Encoder) EncodePoints(p point.Points) (err error) {
+func (enc *Encoder) EncodePoints(p types.Points) (err error) {
 	if err = enc.StartDirective("POINTS"); err != nil {
 		return
 	}

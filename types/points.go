@@ -1,14 +1,12 @@
-package point
+package types
 
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/geo-data/mapfile/types"
 )
 
 type Point struct {
-	X, Y types.Double
+	X, Y Double
 }
 
 func (p *Point) String() string {
@@ -16,7 +14,7 @@ func (p *Point) String() string {
 }
 
 func (p *Point) MarshalJSON() ([]byte, error) {
-	return json.Marshal([]types.Double{p.X, p.Y})
+	return json.Marshal([]Double{p.X, p.Y})
 }
 
 type Points []*Point

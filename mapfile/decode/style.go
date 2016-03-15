@@ -2,10 +2,10 @@ package decode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/types/style"
+	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Style() (s *style.Style, err error) {
+func (t *Decoder) Style() (s *types.Style, err error) {
 	token := t.Value()
 	if token != "STYLE" {
 		err = fmt.Errorf("expected token STYLE, got: %s", token)
@@ -13,7 +13,7 @@ func (t *Decoder) Style() (s *style.Style, err error) {
 	}
 	t.Next()
 
-	s = new(style.Style)
+	s = new(types.Style)
 	for t != nil {
 		token := t.Value()
 		switch token {

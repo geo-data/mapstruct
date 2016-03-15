@@ -1,12 +1,9 @@
-package size
+package types
 
-import (
-	"fmt"
-	"github.com/geo-data/mapfile/types"
-)
+import "fmt"
 
 type Size struct {
-	Width, Height types.Uint32
+	Width, Height Uint32
 }
 
 func (s *Size) String() string {

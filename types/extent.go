@@ -1,19 +1,16 @@
-package extent
+package types
 
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/geo-data/mapfile/types"
-	"github.com/geo-data/mapfile/types/point"
 )
 
 type Extent struct {
-	Min, Max *point.Point
+	Min, Max *Point
 }
 
 func (e *Extent) MarshalJSON() ([]byte, error) {
-	a := []types.Double{
+	a := []Double{
 		e.Min.X,
 		e.Min.Y,
 		e.Max.X,

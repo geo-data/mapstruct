@@ -1,11 +1,8 @@
 package encode
 
-import (
-	"github.com/geo-data/mapfile/types"
-	"github.com/geo-data/mapfile/types/projection"
-)
+import "github.com/geo-data/mapfile/types"
 
-func (enc *Encoder) EncodeProjection(p projection.Projection) (err error) {
+func (enc *Encoder) EncodeProjection(p types.Projection) (err error) {
 	if err = enc.StartDirective("PROJECTION"); err != nil {
 		return
 	}

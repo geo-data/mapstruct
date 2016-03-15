@@ -1,8 +1,8 @@
 package encode
 
-import "github.com/geo-data/mapfile/types/mapobj"
+import "github.com/geo-data/mapfile/types"
 
-func (enc *Encoder) EncodeMap(m *mapobj.Map) (err error) {
+func (enc *Encoder) EncodeMap(m *types.Map) (err error) {
 	if err = enc.StartDirective("MAP"); err != nil {
 		return
 	}

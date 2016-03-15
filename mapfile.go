@@ -8,7 +8,7 @@ import (
 
 	"github.com/geo-data/mapfile/mapfile/decode"
 	"github.com/geo-data/mapfile/mapfile/encode"
-	"github.com/geo-data/mapfile/types/mapobj"
+	"github.com/geo-data/mapfile/types"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var map_ *mapobj.Map
+	var map_ *types.Map
 	if map_, err = dec.Map(); err != nil {
 		log.Fatal(err)
 	}

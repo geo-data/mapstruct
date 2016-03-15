@@ -1,3 +1,3 @@
-package projection
+package types
 
 type Projection []string

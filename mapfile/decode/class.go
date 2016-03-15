@@ -2,11 +2,10 @@ package decode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/types/class"
-	"github.com/geo-data/mapfile/types/style"
+	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Class() (c *class.Class, err error) {
+func (t *Decoder) Class() (c *types.Class, err error) {
 	token := t.Value()
 	if token != "CLASS" {
 		err = fmt.Errorf("expected token CLASS, got: %s", token)
@@ -14,7 +13,7 @@ func (t *Decoder) Class() (c *class.Class, err error) {
 	}
 	t.Next()
 
-	c = new(class.Class)
+	c = new(types.Class)
 	for t != nil {
 		token := t.Value()
 		switch token {
@@ -39,7 +38,7 @@ func (t *Decoder) Class() (c *class.Class, err error) {
 				return
 			}
 		case "STYLE":
-			var s *style.Style
+			var s *types.Style
 			if s, err = t.Style(); err != nil {
 				return
 			}

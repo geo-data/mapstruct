@@ -1,8 +1,8 @@
 package encode
 
-import "github.com/geo-data/mapfile/types/label"
+import "github.com/geo-data/mapfile/types"
 
-func (enc *Encoder) EncodeLabel(l *label.Label) (err error) {
+func (enc *Encoder) EncodeLabel(l *types.Label) (err error) {
 	if err = enc.StartDirective("LABEL"); err != nil {
 		return
 	}

@@ -1,11 +1,8 @@
 package encode
 
-import (
-	"github.com/geo-data/mapfile/types"
-	"github.com/geo-data/mapfile/types/metadata"
-)
+import "github.com/geo-data/mapfile/types"
 
-func (enc *Encoder) EncodeMetadata(m metadata.Metadata) (err error) {
+func (enc *Encoder) EncodeMetadata(m types.Metadata) (err error) {
 	if err = enc.StartDirective("METADATA"); err != nil {
 		return
 	}

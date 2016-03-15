@@ -1,8 +1,8 @@
 package encode
 
-import "github.com/geo-data/mapfile/types/web"
+import "github.com/geo-data/mapfile/types"
 
-func (enc *Encoder) EncodeWeb(w *web.Web) (err error) {
+func (enc *Encoder) EncodeWeb(w *types.Web) (err error) {
 	if err = enc.StartDirective("WEB"); err != nil {
 		return
 	}

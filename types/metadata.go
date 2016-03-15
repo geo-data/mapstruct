@@ -1,7 +1,7 @@
-package metadata
+package types
 
 type Metadata map[string]string
 
-func New() Metadata {
+func NewMetadata() Metadata {
 	return Metadata(make(map[string]string))
 }

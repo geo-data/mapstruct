@@ -1,12 +1,9 @@
-package color
+package types
 
-import (
-	"fmt"
-	"github.com/geo-data/mapfile/types"
-)
+import "fmt"
 
 type Color struct {
-	R, G, B types.Uint8
+	R, G, B Uint8
 }
 
 func (c *Color) String() string {

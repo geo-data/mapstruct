@@ -1,8 +1,8 @@
 package encode
 
-import "github.com/geo-data/mapfile/types/legend"
+import "github.com/geo-data/mapfile/types"
 
-func (enc *Encoder) EncodeLegend(l *legend.Legend) (err error) {
+func (enc *Encoder) EncodeLegend(l *types.Legend) (err error) {
 	if err = enc.StartDirective("LEGEND"); err != nil {
 		return
 	}

@@ -2,10 +2,10 @@ package decode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/types/web"
+	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Web() (w *web.Web, err error) {
+func (t *Decoder) Web() (w *types.Web, err error) {
 	token := t.Value()
 	if token != "WEB" {
 		err = fmt.Errorf("expected token WEB, got: %s", token)
@@ -13,7 +13,7 @@ func (t *Decoder) Web() (w *web.Web, err error) {
 	}
 	t.Next()
 
-	w = new(web.Web)
+	w = new(types.Web)
 	for t != nil {
 		token := t.Value()
 		switch token {

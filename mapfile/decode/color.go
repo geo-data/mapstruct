@@ -1,9 +1,9 @@
 package decode
 
-import "github.com/geo-data/mapfile/types/color"
+import "github.com/geo-data/mapfile/types"
 
-func (t *Decoder) Color() (c *color.Color, err error) {
-	c = new(color.Color)
+func (t *Decoder) Color() (c *types.Color, err error) {
+	c = new(types.Color)
 	if c.R, err = t.Next().Uint8(); err != nil {
 		return
 	}
