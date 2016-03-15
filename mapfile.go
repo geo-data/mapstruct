@@ -34,7 +34,7 @@ func main() {
 
 	var out bytes.Buffer
 	enc := encode.NewMapfileEncoder(&out)
-	if err = enc.Encode(map_); err != nil {
+	if err = enc.EncodeMap(map_); err != nil {
 		log.Fatal(err)
 	}
 
