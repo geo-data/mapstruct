@@ -32,7 +32,7 @@ func (e *Encoder) indent() error {
 	return nil
 }
 
-func (e *Encoder) TokenString(name string, value string) (err error) {
+func (e *Encoder) EncodeDirectiveString(name string, value string) (err error) {
 	if value == "" {
 		return
 	}
@@ -45,15 +45,15 @@ func (e *Encoder) TokenString(name string, value string) (err error) {
 	return
 }
 
-func (e *Encoder) TokenStringer(name string, value fmt.Stringer) (err error) {
+func (e *Encoder) EncodeDirectiveStringer(name string, value fmt.Stringer) (err error) {
 	if value == nil {
 		return
 	}
 
-	return e.TokenString(name, value.String())
+	return e.EncodeDirectiveString(name, value.String())
 }
 
-func (e *Encoder) TokenUnion(name string, value types.Union) (err error) {
+func (e *Encoder) EncodeDirectiveUnion(name string, value types.Union) (err error) {
 	var s string
 	switch t := value.(type) {
 	case nil:
@@ -76,7 +76,7 @@ func (e *Encoder) TokenUnion(name string, value types.Union) (err error) {
 		err = fmt.Errorf("unhandled type: %v", t)
 		return
 	}
-	return e.TokenString(name, s)
+	return e.EncodeDirectiveString(name, s)
 }
 
 func (e *Encoder) EncodeString(value fmt.Stringer) (err error) {
@@ -129,7 +129,7 @@ func (e *Encoder) EncodeStrings(values ...string) (err error) {
 	return
 }
 
-func (e *Encoder) TokenStart(name string) (err error) {
+func (e *Encoder) StartDirective(name string) (err error) {
 	if err = e.indent(); err != nil {
 		return
 	}
@@ -143,7 +143,7 @@ func (e *Encoder) TokenStart(name string) (err error) {
 	return
 }
 
-func (e *Encoder) TokenEnd() (err error) {
+func (e *Encoder) EndDirective() (err error) {
 	e.depth--
 
 	if err = e.indent(); err != nil {

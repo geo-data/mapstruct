@@ -3,11 +3,11 @@ package encode
 import "github.com/geo-data/mapfile/types/layer"
 
 func (enc *Encoder) EncodeLayer(l *layer.Layer) (err error) {
-	if err = enc.TokenStart("LAYER"); err != nil {
+	if err = enc.StartDirective("LAYER"); err != nil {
 		return
 	}
 
-	if err = enc.TokenStringer("NAME", l.Name); err != nil {
+	if err = enc.EncodeDirectiveStringer("NAME", l.Name); err != nil {
 		return
 	}
 	if l.Extent != nil {
@@ -15,10 +15,10 @@ func (enc *Encoder) EncodeLayer(l *layer.Layer) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenStringer("TYPE", l.Type); err != nil {
+	if err = enc.EncodeDirectiveStringer("TYPE", l.Type); err != nil {
 		return
 	}
-	if err = enc.TokenUnion("DEBUG", l.Debug); err != nil {
+	if err = enc.EncodeDirectiveUnion("DEBUG", l.Debug); err != nil {
 		return
 	}
 	if l.Projection != nil {
@@ -26,13 +26,13 @@ func (enc *Encoder) EncodeLayer(l *layer.Layer) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenStringer("DATA", l.Data); err != nil {
+	if err = enc.EncodeDirectiveStringer("DATA", l.Data); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("PROCESSING", l.Processing); err != nil {
+	if err = enc.EncodeDirectiveStringer("PROCESSING", l.Processing); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("STATUS", l.Status); err != nil {
+	if err = enc.EncodeDirectiveStringer("STATUS", l.Status); err != nil {
 		return
 	}
 	if l.Metadata != nil {
@@ -40,10 +40,10 @@ func (enc *Encoder) EncodeLayer(l *layer.Layer) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenString("CLASSITEM", l.ClassItem.QuotedString()); err != nil {
+	if err = enc.EncodeDirectiveString("CLASSITEM", l.ClassItem.QuotedString()); err != nil {
 		return
 	}
-	if err = enc.TokenString("LABELITEM", l.LabelItem.QuotedString()); err != nil {
+	if err = enc.EncodeDirectiveString("LABELITEM", l.LabelItem.QuotedString()); err != nil {
 		return
 	}
 
@@ -59,7 +59,7 @@ func (enc *Encoder) EncodeLayer(l *layer.Layer) (err error) {
 		}
 	}
 
-	if err = enc.TokenEnd(); err != nil {
+	if err = enc.EndDirective(); err != nil {
 		return
 	}
 

@@ -3,23 +3,23 @@ package encode
 import "github.com/geo-data/mapfile/types/mapobj"
 
 func (enc *Encoder) EncodeMap(m *mapobj.Map) (err error) {
-	if err = enc.TokenStart("MAP"); err != nil {
+	if err = enc.StartDirective("MAP"); err != nil {
 		return
 	}
 
-	if err = enc.TokenStringer("NAME", m.Name); err != nil {
+	if err = enc.EncodeDirectiveStringer("NAME", m.Name); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("IMAGETYPE", m.ImageType); err != nil {
+	if err = enc.EncodeDirectiveStringer("IMAGETYPE", m.ImageType); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("STATUS", m.Status); err != nil {
+	if err = enc.EncodeDirectiveStringer("STATUS", m.Status); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("FONTSET", m.Fontset); err != nil {
+	if err = enc.EncodeDirectiveStringer("FONTSET", m.Fontset); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("SYMBOLSET", m.Symbolset); err != nil {
+	if err = enc.EncodeDirectiveStringer("SYMBOLSET", m.Symbolset); err != nil {
 		return
 	}
 
@@ -34,7 +34,7 @@ func (enc *Encoder) EncodeMap(m *mapobj.Map) (err error) {
 		}
 	}
 	if m.ImageColor != nil {
-		if err = enc.TokenStringer("IMAGECOLOR", m.ImageColor); err != nil {
+		if err = enc.EncodeDirectiveStringer("IMAGECOLOR", m.ImageColor); err != nil {
 			return
 		}
 	}
@@ -65,7 +65,7 @@ func (enc *Encoder) EncodeMap(m *mapobj.Map) (err error) {
 		}
 	}
 
-	if err = enc.TokenEnd(); err != nil {
+	if err = enc.EndDirective(); err != nil {
 		return
 	}
 

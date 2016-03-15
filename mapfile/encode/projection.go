@@ -6,7 +6,7 @@ import (
 )
 
 func (enc *Encoder) EncodeProjection(p projection.Projection) (err error) {
-	if err = enc.TokenStart("PROJECTION"); err != nil {
+	if err = enc.StartDirective("PROJECTION"); err != nil {
 		return
 	}
 
@@ -16,7 +16,7 @@ func (enc *Encoder) EncodeProjection(p projection.Projection) (err error) {
 		}
 	}
 
-	if err = enc.TokenEnd(); err != nil {
+	if err = enc.EndDirective(); err != nil {
 		return
 	}
 

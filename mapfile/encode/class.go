@@ -3,20 +3,20 @@ package encode
 import "github.com/geo-data/mapfile/types/class"
 
 func (enc *Encoder) EncodeClass(c *class.Class) (err error) {
-	if err = enc.TokenStart("CLASS"); err != nil {
+	if err = enc.StartDirective("CLASS"); err != nil {
 		return
 	}
 
-	if err = enc.TokenStringer("NAME", c.Name); err != nil {
+	if err = enc.EncodeDirectiveStringer("NAME", c.Name); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("EXPRESSION", c.Expression); err != nil {
+	if err = enc.EncodeDirectiveStringer("EXPRESSION", c.Expression); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("TEMPLATE", c.Template); err != nil {
+	if err = enc.EncodeDirectiveStringer("TEMPLATE", c.Template); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("TEXT", c.Text); err != nil {
+	if err = enc.EncodeDirectiveStringer("TEXT", c.Text); err != nil {
 		return
 	}
 	if c.Metadata != nil {
@@ -36,7 +36,7 @@ func (enc *Encoder) EncodeClass(c *class.Class) (err error) {
 		}
 	}
 
-	if err = enc.TokenEnd(); err != nil {
+	if err = enc.EndDirective(); err != nil {
 		return
 	}
 

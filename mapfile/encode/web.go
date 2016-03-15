@@ -3,7 +3,7 @@ package encode
 import "github.com/geo-data/mapfile/types/web"
 
 func (enc *Encoder) EncodeWeb(w *web.Web) (err error) {
-	if err = enc.TokenStart("WEB"); err != nil {
+	if err = enc.StartDirective("WEB"); err != nil {
 		return
 	}
 
@@ -13,7 +13,7 @@ func (enc *Encoder) EncodeWeb(w *web.Web) (err error) {
 		}
 	}
 
-	if err = enc.TokenEnd(); err != nil {
+	if err = enc.EndDirective(); err != nil {
 		return
 	}
 

@@ -6,7 +6,7 @@ import (
 )
 
 func (enc *Encoder) EncodePoints(p point.Points) (err error) {
-	if err = enc.TokenStart("POINTS"); err != nil {
+	if err = enc.StartDirective("POINTS"); err != nil {
 		return
 	}
 
@@ -19,7 +19,7 @@ func (enc *Encoder) EncodePoints(p point.Points) (err error) {
 		return
 	}
 
-	if err = enc.TokenEnd(); err != nil {
+	if err = enc.EndDirective(); err != nil {
 		return
 	}
 

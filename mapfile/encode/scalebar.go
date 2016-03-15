@@ -3,20 +3,20 @@ package encode
 import "github.com/geo-data/mapfile/types/scalebar"
 
 func (enc *Encoder) EncodeScalebar(s *scalebar.Scalebar) (err error) {
-	if err = enc.TokenStart("SCALEBAR"); err != nil {
+	if err = enc.StartDirective("SCALEBAR"); err != nil {
 		return
 	}
 
-	if err = enc.TokenStringer("STATUS", s.Status); err != nil {
+	if err = enc.EncodeDirectiveStringer("STATUS", s.Status); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("POSTLABELCACHE", s.PostLabelCache); err != nil {
+	if err = enc.EncodeDirectiveStringer("POSTLABELCACHE", s.PostLabelCache); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("STYLE", s.Style); err != nil {
+	if err = enc.EncodeDirectiveStringer("STYLE", s.Style); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("UNITS", s.Units); err != nil {
+	if err = enc.EncodeDirectiveStringer("UNITS", s.Units); err != nil {
 		return
 	}
 	if s.Size != nil {
@@ -24,24 +24,24 @@ func (enc *Encoder) EncodeScalebar(s *scalebar.Scalebar) (err error) {
 			return
 		}
 	}
-	if err = enc.TokenStringer("POSITION", s.Position); err != nil {
+	if err = enc.EncodeDirectiveStringer("POSITION", s.Position); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("TRANSPARENT", s.Transparent); err != nil {
+	if err = enc.EncodeDirectiveStringer("TRANSPARENT", s.Transparent); err != nil {
 		return
 	}
 	if s.Color != nil {
-		if err = enc.TokenStringer("COLOR", s.Color); err != nil {
+		if err = enc.EncodeDirectiveStringer("COLOR", s.Color); err != nil {
 			return
 		}
 	}
 	if s.ImageColor != nil {
-		if err = enc.TokenStringer("IMAGECOLOR", s.ImageColor); err != nil {
+		if err = enc.EncodeDirectiveStringer("IMAGECOLOR", s.ImageColor); err != nil {
 			return
 		}
 	}
 	if s.BackgroundColor != nil {
-		if err = enc.TokenStringer("BACKGROUNDCOLOR", s.BackgroundColor); err != nil {
+		if err = enc.EncodeDirectiveStringer("BACKGROUNDCOLOR", s.BackgroundColor); err != nil {
 			return
 		}
 	}
@@ -51,7 +51,7 @@ func (enc *Encoder) EncodeScalebar(s *scalebar.Scalebar) (err error) {
 		}
 	}
 
-	if err = enc.TokenEnd(); err != nil {
+	if err = enc.EndDirective(); err != nil {
 		return
 	}
 

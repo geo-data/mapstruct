@@ -3,17 +3,17 @@ package encode
 import "github.com/geo-data/mapfile/types/feature"
 
 func (enc *Encoder) EncodeFeature(f *feature.Feature) (err error) {
-	if err = enc.TokenStart("FEATURE"); err != nil {
+	if err = enc.StartDirective("FEATURE"); err != nil {
 		return
 	}
 
-	if err = enc.TokenStringer("WKT", f.Wkt); err != nil {
+	if err = enc.EncodeDirectiveStringer("WKT", f.Wkt); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("ITEMS", f.Items); err != nil {
+	if err = enc.EncodeDirectiveStringer("ITEMS", f.Items); err != nil {
 		return
 	}
-	if err = enc.TokenStringer("TEXT", f.Text); err != nil {
+	if err = enc.EncodeDirectiveStringer("TEXT", f.Text); err != nil {
 		return
 	}
 	if f.Points != nil {
@@ -22,7 +22,7 @@ func (enc *Encoder) EncodeFeature(f *feature.Feature) (err error) {
 		}
 	}
 
-	if err = enc.TokenEnd(); err != nil {
+	if err = enc.EndDirective(); err != nil {
 		return
 	}
 

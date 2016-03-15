@@ -6,7 +6,7 @@ import (
 )
 
 func (enc *Encoder) EncodeMetadata(m metadata.Metadata) (err error) {
-	if err = enc.TokenStart("METADATA"); err != nil {
+	if err = enc.StartDirective("METADATA"); err != nil {
 		return
 	}
 
@@ -16,7 +16,7 @@ func (enc *Encoder) EncodeMetadata(m metadata.Metadata) (err error) {
 		}
 	}
 
-	if err = enc.TokenEnd(); err != nil {
+	if err = enc.EndDirective(); err != nil {
 		return
 	}
 
