@@ -3,7 +3,7 @@ package size
 import (
 	"fmt"
 	"github.com/geo-data/mapfile/mapfile/encode"
-	"github.com/geo-data/mapfile/tokens"
+	"github.com/geo-data/mapfile/mapfile/decode/tokens"
 	"github.com/geo-data/mapfile/types"
 )
 
