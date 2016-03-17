@@ -5,7 +5,7 @@ import (
 	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Style() (s *types.Style, err error) {
+func (t *Decoder) Style() (style *types.Style, err error) {
 	token := t.Value()
 	if token != "STYLE" {
 		err = fmt.Errorf("expected token STYLE, got: %s", token)
@@ -13,7 +13,8 @@ func (t *Decoder) Style() (s *types.Style, err error) {
 	}
 	t.Next()
 
-	s = new(types.Style)
+	s := new(types.Style)
+Loop:
 	for t != nil {
 		token := t.Value()
 		switch token {
@@ -34,8 +35,7 @@ func (t *Decoder) Style() (s *types.Style, err error) {
 				return
 			}
 		case "WIDTH":
-			if s.Width, err = t.Next().Decode(String | Double); err != nil {
-				err = fmt.Errorf("could not decode WIDTH: %s", err)
+			if s.Width, err = t.Next().Decode(Double | Attribute); err != nil {
 				return
 			}
 		case "GEOMTRANSFORM":
@@ -43,7 +43,13 @@ func (t *Decoder) Style() (s *types.Style, err error) {
 				return
 			}
 		case "END":
-			return
+			break Loop
+		case "":
+			if t.AtEnd() {
+				err = EndOfTokens
+				return
+			}
+			fallthrough
 		default:
 			err = fmt.Errorf("unhandled mapfile token: %s", token)
 			return
@@ -52,5 +58,6 @@ func (t *Decoder) Style() (s *types.Style, err error) {
 		t = t.Next()
 	}
 
+	style = s
 	return
 }

@@ -5,7 +5,7 @@ import (
 	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Web() (w *types.Web, err error) {
+func (t *Decoder) Web() (web *types.Web, err error) {
 	token := t.Value()
 	if token != "WEB" {
 		err = fmt.Errorf("expected token WEB, got: %s", token)
@@ -13,7 +13,8 @@ func (t *Decoder) Web() (w *types.Web, err error) {
 	}
 	t.Next()
 
-	w = new(types.Web)
+	w := new(types.Web)
+Loop:
 	for t != nil {
 		token := t.Value()
 		switch token {
@@ -22,7 +23,13 @@ func (t *Decoder) Web() (w *types.Web, err error) {
 				return
 			}
 		case "END":
-			return
+			break Loop
+		case "":
+			if t.AtEnd() {
+				err = EndOfTokens
+				return
+			}
+			fallthrough
 		default:
 			err = fmt.Errorf("unhandled mapfile token: %s", token)
 			return
@@ -31,5 +38,6 @@ func (t *Decoder) Web() (w *types.Web, err error) {
 		t = t.Next()
 	}
 
+	web = w
 	return
 }

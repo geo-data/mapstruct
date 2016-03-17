@@ -102,6 +102,7 @@ func (t *Decoder) Integer() (i types.Integer, err error) {
 func (t *Decoder) Double() (f types.Double, err error) {
 	var tf float64
 	if tf, err = strconv.ParseFloat(t.Value(), 64); err != nil {
+		err = fmt.Errorf("invalid syntax for double: %s", t.Value())
 		return
 	}
 

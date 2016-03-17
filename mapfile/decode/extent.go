@@ -5,7 +5,7 @@ import (
 	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Extent() (e *types.Extent, err error) {
+func (t *Decoder) Extent() (extent *types.Extent, err error) {
 	token := t.Value()
 	if token != "EXTENT" {
 		err = fmt.Errorf("expected token EXTENT, got: %s", token)
@@ -13,7 +13,7 @@ func (t *Decoder) Extent() (e *types.Extent, err error) {
 	}
 	t.Next()
 
-	e = new(types.Extent)
+	e := new(types.Extent)
 	if e.Min, err = t.Point(); err != nil {
 		return
 	}
@@ -22,5 +22,7 @@ func (t *Decoder) Extent() (e *types.Extent, err error) {
 	if e.Max, err = t.Point(); err != nil {
 		return
 	}
+
+	extent = e
 	return
 }

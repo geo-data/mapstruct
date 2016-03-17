@@ -25,3 +25,17 @@ func (p *Point) MarshalJSON() ([]byte, error) {
 }
 
 type Points []*Point
+
+func NewPoints(points []float64) (p Points, err error) {
+	if len(points)%2 != 0 {
+		err = fmt.Errorf("number of points is not even: %d", len(points))
+		return
+	}
+
+	for i := 0; i < len(points); i += 2 {
+		x := points[i]
+		y := points[i+1]
+		p = append(p, NewPoint(x, y))
+	}
+	return
+}

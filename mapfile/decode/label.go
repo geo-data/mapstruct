@@ -5,7 +5,7 @@ import (
 	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Label() (l *types.Label, err error) {
+func (t *Decoder) Label() (label *types.Label, err error) {
 	token := t.Value()
 	if token != "LABEL" {
 		err = fmt.Errorf("expected token LABEL, got: %s", token)
@@ -13,7 +13,8 @@ func (t *Decoder) Label() (l *types.Label, err error) {
 	}
 	t.Next()
 
-	l = new(types.Label)
+	l := new(types.Label)
+Loop:
 	for t != nil {
 		token := t.Value()
 		switch token {
@@ -48,7 +49,13 @@ func (t *Decoder) Label() (l *types.Label, err error) {
 			}
 			l.Styles = append(l.Styles, s)
 		case "END":
-			return
+			break Loop
+		case "":
+			if t.AtEnd() {
+				err = EndOfTokens
+				return
+			}
+			fallthrough
 		default:
 			err = fmt.Errorf("unhandled mapfile token: %s", token)
 			return
@@ -57,5 +64,6 @@ func (t *Decoder) Label() (l *types.Label, err error) {
 		t = t.Next()
 	}
 
+	label = l
 	return
 }

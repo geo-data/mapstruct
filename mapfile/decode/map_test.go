@@ -1,6 +1,7 @@
 package decode_test
 
 import (
+	"errors"
 	"github.com/geo-data/mapfile/mapfile/decode"
 	"github.com/geo-data/mapfile/types"
 	"reflect"
@@ -11,6 +12,9 @@ var mapTests = []struct {
 	input    string
 	expected *types.Map // expected result
 }{
+	{`
+MAP
+END`, &types.Map{}},
 	{`
 MAP
   NAME "Testing"
@@ -33,7 +37,7 @@ END`, &types.Map{
 MAP
   IMAGECOLOR 255 255 255
 END`, &types.Map{
-		ImageColor: types.NewColor(255, 255, 255, 0),
+		ImageColor: types.NewColor(255, 255, 255, 255),
 	}},
 	{`
 MAP
@@ -101,19 +105,54 @@ END`, &types.Map{
 	}},
 }
 
+var mapErrorTests = []struct {
+	input    string
+	expected error // expected result
+}{
+	{"MAP", decode.EndOfTokens},
+	{`
+FOOBAR
+END`, errors.New(`expected token MAP, got: "FOOBAR"`)},
+	{`
+MAP
+  FOO BAR
+END`, errors.New(`unhandled mapfile token: "FOO"`)},
+}
+
 func TestDecodeMap(t *testing.T) {
 	for _, tt := range mapTests {
 		dec, err := decode.DecodeString(tt.input)
 		if err != nil {
-			t.Fatal(err)
+			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
+			continue
 		}
 		actual, err := dec.Map()
 		if err != nil {
-			t.Fatal(err)
+			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
+			continue
 		}
 
 		if !reflect.DeepEqual(tt.expected, actual) {
-			t.Error("For", tt.input, "expected", tt.expected, "got", actual)
+			t.Error("For:", tt.input, ", expected:", tt.expected, ", got:", actual)
+		}
+	}
+}
+
+func TestDecodeMapError(t *testing.T) {
+	for _, tt := range mapErrorTests {
+		dec, err := decode.DecodeString(tt.input)
+		if err != nil {
+			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
+			continue
+		}
+		actual, err := dec.Map()
+		if actual != nil {
+			t.Error("For:", tt.input, ", expected map:", nil, ", got:", actual)
+			continue
+		}
+
+		if err.Error() != tt.expected.Error() {
+			t.Error("For:", tt.input, ", expected error:", tt.expected, ", got:", err)
 		}
 	}
 }

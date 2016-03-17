@@ -5,7 +5,7 @@ import (
 	"github.com/geo-data/mapfile/types"
 )
 
-func (t *Decoder) Scalebar() (s *types.Scalebar, err error) {
+func (t *Decoder) Scalebar() (scalebar *types.Scalebar, err error) {
 	token := t.Value()
 	if token != "SCALEBAR" {
 		err = fmt.Errorf("expected token SCALEBAR, got: %s", token)
@@ -13,7 +13,8 @@ func (t *Decoder) Scalebar() (s *types.Scalebar, err error) {
 	}
 	t.Next()
 
-	s = new(types.Scalebar)
+	s := new(types.Scalebar)
+Loop:
 	for t != nil {
 		token := t.Value()
 		switch token {
@@ -62,7 +63,13 @@ func (t *Decoder) Scalebar() (s *types.Scalebar, err error) {
 				return
 			}
 		case "END":
-			return
+			break Loop
+		case "":
+			if t.AtEnd() {
+				err = EndOfTokens
+				return
+			}
+			fallthrough
 		default:
 			err = fmt.Errorf("unhandled mapfile token: %s", token)
 			return
@@ -71,5 +78,6 @@ func (t *Decoder) Scalebar() (s *types.Scalebar, err error) {
 		t = t.Next()
 	}
 
+	scalebar = s
 	return
 }

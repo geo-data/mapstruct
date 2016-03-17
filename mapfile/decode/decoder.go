@@ -1,8 +1,13 @@
 package decode
 
 import (
+	"errors"
 	"github.com/geo-data/mapfile/mapfile/decode/tokenize"
 	"os"
+)
+
+var (
+	EndOfTokens = errors.New("decode failed: unexpected end of mapfile")
 )
 
 type Decoder struct {
@@ -11,6 +16,10 @@ type Decoder struct {
 }
 
 func (t *Decoder) Value() string {
+	if t.AtEnd() {
+		return ""
+	}
+
 	v := t.tokens[t.idx]
 	for v == "" && t.idx < uint(len(t.tokens)) {
 		t.idx++
@@ -20,13 +29,23 @@ func (t *Decoder) Value() string {
 	return v
 }
 
+func (t *Decoder) AtEnd() bool {
+	return t.idx >= uint(len(t.tokens))
+}
+
 func (t *Decoder) Next() *Decoder {
-	if t.idx+1 < uint(len(t.tokens)) {
+	if !t.AtEnd() {
 		t.idx++
 		return t
 	}
 
 	return nil
+}
+
+func NewDecoder(tokens []string) *Decoder {
+	return &Decoder{
+		tokens: tokens,
+	}
 }
 
 func DecodeMapfile(mapfile string) (dec *Decoder, err error) {
