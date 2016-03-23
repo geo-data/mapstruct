@@ -20,19 +20,15 @@ var pointErrorTests = []struct {
 	input    string
 	expected error // expected result
 }{
-	{"", decode.EndOfTokens},
-	{"1", decode.EndOfTokens},
-	{"foo 1", errors.New(`invalid syntax for X coordinate: "foo"`)},
-	{"1 foo", errors.New(`invalid syntax for Y coordinate: "foo"`)},
+	{"", errors.New("could not decode X coordinate: unexpected end of mapfile")},
+	{"1", errors.New("could not decode Y coordinate: unexpected end of mapfile")},
+	{"foo 1", errors.New(`could not decode X coordinate: token is not a number: foo`)},
+	{"1 foo", errors.New(`could not decode Y coordinate: token is not a number: foo`)},
 }
 
 func TestDecodePoint(t *testing.T) {
 	for _, tt := range pointTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Point()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -47,11 +43,7 @@ func TestDecodePoint(t *testing.T) {
 
 func TestDecodePointError(t *testing.T) {
 	for _, tt := range pointErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Point()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected point:", nil, ", got:", actual)

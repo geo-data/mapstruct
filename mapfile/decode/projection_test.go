@@ -42,16 +42,12 @@ var projectionErrorTests = []struct {
 	{"PROJECTION", decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token PROJECTION, got: "FOOBAR"`)},
+END`, errors.New(`expected token PROJECTION, got: FOOBAR`)},
 }
 
 func TestDecodeProjection(t *testing.T) {
 	for _, tt := range projectionTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Projection()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -66,11 +62,7 @@ func TestDecodeProjection(t *testing.T) {
 
 func TestDecodeProjectionError(t *testing.T) {
 	for _, tt := range projectionErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Projection()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected projection:", nil, ", got:", actual)

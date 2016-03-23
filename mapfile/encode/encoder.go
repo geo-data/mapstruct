@@ -68,6 +68,12 @@ func (e *Encoder) EncodeDirectiveUnion(name string, value types.Union) (err erro
 		s = fmt.Stringer(t).String()
 	case types.Keyword:
 		s = fmt.Stringer(t).String()
+	case types.Expression:
+		s = fmt.Stringer(t).String()
+	case types.Regex:
+		s = fmt.Stringer(t).String()
+	case types.Listex:
+		s = fmt.Stringer(t).String()
 	case types.Uint8:
 		s = fmt.Stringer(t).String()
 	case types.Integer:

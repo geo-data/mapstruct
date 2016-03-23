@@ -80,20 +80,16 @@ var classErrorTests = []struct {
 	{"CLASS", decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token CLASS, got: "FOOBAR"`)},
+END`, errors.New(`expected token CLASS, got: FOOBAR`)},
 	{`
 CLASS
   FOO BAR
-END`, errors.New(`unhandled mapfile token: "FOO"`)},
+END`, errors.New(`unhandled mapfile token: FOO`)},
 }
 
 func TestDecodeClass(t *testing.T) {
 	for _, tt := range classTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Class()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -108,11 +104,7 @@ func TestDecodeClass(t *testing.T) {
 
 func TestDecodeClassError(t *testing.T) {
 	for _, tt := range classErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Class()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected class:", nil, ", got:", actual)

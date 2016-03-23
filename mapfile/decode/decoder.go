@@ -1,81 +1,105 @@
 package decode
 
 import (
+	"bytes"
 	"errors"
-	"github.com/geo-data/mapfile/mapfile/decode/tokenize"
-	"os"
+	"fmt"
+	"github.com/geo-data/mapfile/mapfile/decode/scanner"
+	"io"
 )
 
 var (
-	EndOfTokens = errors.New("decode failed: unexpected end of mapfile")
+	EndOfTokens = errors.New("unexpected end of mapfile")
 )
 
 type Decoder struct {
-	tokens []string
-	idx    uint
+	scanner scanner.Scanner
+	current *scanner.Token
 }
 
 func (t *Decoder) Value() string {
-	if t.AtEnd() {
-		return ""
+	if tok, _ := t.Token(); tok != nil {
+		return tok.Value
 	}
-
-	v := t.tokens[t.idx]
-	for v == "" && t.idx < uint(len(t.tokens)) {
-		t.idx++
-		v = t.tokens[t.idx]
-	}
-
-	return v
+	return ""
 }
 
-func (t *Decoder) AtEnd() bool {
-	return t.idx >= uint(len(t.tokens))
+func (t *Decoder) Type() scanner.TokenType {
+	if tok, _ := t.Token(); tok != nil {
+		return tok.Type
+	}
+	return scanner.EOF
+}
+
+func (t *Decoder) Token() (token *scanner.Token, err error) {
+	if t.current == nil {
+		t.current = t.nextToken()
+	}
+
+	if t.current == nil || t.current.Type == scanner.EOF {
+		err = EndOfTokens
+	}
+
+	token = t.current
+	return
+}
+
+func (t *Decoder) ExpectedToken(expected scanner.TokenType) (token *scanner.Token, err error) {
+	if token, err = t.Token(); err != nil {
+		return
+	}
+
+	if token.Type != expected {
+		err = fmt.Errorf("expected token %s, got: %s", expected, token)
+		return
+	}
+
+	return
+}
+
+func (t *Decoder) nextToken() *scanner.Token {
+	for token := t.scanner.Scan(); token != nil && token.Type != scanner.EOF; token = t.scanner.Scan() {
+		switch token.Type {
+		case scanner.WS:
+			continue
+		case scanner.MS_COMMENT:
+			continue
+		default:
+			return token
+		}
+	}
+
+	return &scanner.Token{
+		scanner.EOF,
+		"",
+	}
 }
 
 func (t *Decoder) Next() *Decoder {
-	if !t.AtEnd() {
-		t.idx++
+	if t.Type() == scanner.EOF {
 		return t
 	}
 
-	return nil
+	if token := t.nextToken(); token != nil {
+		t.current = token
+	}
+
+	return t
 }
 
-func NewDecoder(tokens []string) *Decoder {
+func NewDecoder(scanner scanner.Scanner) *Decoder {
 	return &Decoder{
-		tokens: tokens,
+		scanner: scanner,
 	}
 }
 
-func DecodeMapfile(mapfile string) (dec *Decoder, err error) {
-	dec = &Decoder{}
-	if dec.tokens, err = tokenize.TokenizeMapfile(mapfile); err != nil {
-		return
-	}
-
-	return
+func DecodeMapfile(mapfile io.Reader) *Decoder {
+	lexer := scanner.NewScanner(mapfile)
+	return NewDecoder(lexer)
 }
 
-func DecodeString(mapfile string) (dec *Decoder, err error) {
-	var tmpfile *os.File
-	if tmpfile, err = tempFile("", "example", ".map"); err != nil {
-		return
-	}
-	filename := tmpfile.Name()
-	defer os.Remove(filename) // clean up
-
-	if _, err = tmpfile.WriteString(mapfile); err != nil {
-		return
-	}
-	if err = tmpfile.Close(); err != nil {
-		return
-	}
-
-	dec = &Decoder{}
-	if dec.tokens, err = tokenize.TokenizeMapfile(filename); err != nil {
-		return
-	}
-
-	return
+func DecodeString(mapfile string) *Decoder {
+	buf := bytes.NewBufferString(mapfile)
+	lexer := scanner.NewScanner(buf)
+	return NewDecoder(lexer)
 }

@@ -22,23 +22,19 @@ var sizeErrorTests = []struct {
 	input    string
 	expected error // expected result
 }{
-	{"SIZE", decode.EndOfTokens},
-	{"SIZE 1", decode.EndOfTokens},
+	{"SIZE", errors.New("could not decode width: unexpected end of mapfile")},
+	{"SIZE 1", errors.New("could not decode height: unexpected end of mapfile")},
 	{`
-FOOBAR 5 10`, errors.New(`expected token SIZE, got: "FOOBAR"`)},
+FOOBAR 5 10`, errors.New(`expected token SIZE, got: FOOBAR`)},
 	{`
-SIZE foo 10`, errors.New(`invalid syntax for width: "foo"`)},
+SIZE foo 10`, errors.New(`could not decode width: token is not a number: foo`)},
 	{`
-SIZE 6 foo`, errors.New(`invalid syntax for height: "foo"`)},
+SIZE 6 foo`, errors.New(`could not decode height: token is not a number: foo`)},
 }
 
 func TestDecodeSize(t *testing.T) {
 	for _, tt := range sizeTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Size()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -53,11 +49,7 @@ func TestDecodeSize(t *testing.T) {
 
 func TestDecodeSizeError(t *testing.T) {
 	for _, tt := range sizeErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Size()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected size:", nil, ", got:", actual)

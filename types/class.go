@@ -7,7 +7,7 @@ type Class struct {
 	Name String `json:",omitempty"`
 	// Expression defines which class a feature belongs to.  If no expression is
 	// given, then all features are said to belong to this class.
-	Expression String   `json:",omitempty"`
+	Expression Union    `json:",omitempty"`
 	Metadata   Metadata `json:",omitempty"`
 	// Styles contains styles applied to the class. A class can contain multiple
 	// styles. Multiple styles can be used create complex symbols (by

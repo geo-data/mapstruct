@@ -2,13 +2,13 @@ package decode
 
 import (
 	"fmt"
+	"github.com/geo-data/mapfile/mapfile/decode/scanner"
 	"github.com/geo-data/mapfile/types"
 )
 
 func (t *Decoder) Style() (style *types.Style, err error) {
-	token := t.Value()
-	if token != "STYLE" {
-		err = fmt.Errorf("expected token STYLE, got: %s", token)
+	var token *scanner.Token
+	if token, err = t.ExpectedToken(scanner.STYLE); err != nil {
 		return
 	}
 	t.Next()
@@ -16,40 +16,37 @@ func (t *Decoder) Style() (style *types.Style, err error) {
 	s := new(types.Style)
 Loop:
 	for t != nil {
-		token := t.Value()
-		switch token {
-		case "COLOR":
+		if token, err = t.Token(); err != nil {
+			return
+		}
+
+		switch token.Type {
+		case scanner.COLOR:
 			if s.Color, err = t.Color(); err != nil {
 				return
 			}
-		case "OUTLINECOLOR":
+		case scanner.OUTLINECOLOR:
 			if s.OutlineColor, err = t.Color(); err != nil {
 				return
 			}
-		case "SYMBOL":
+		case scanner.SYMBOL:
 			if s.Symbol, err = t.Next().Decode(Integer | String | Attribute); err != nil {
 				return
 			}
-		case "SIZE":
+		case scanner.SIZE:
 			if s.Size, err = t.Next().Decode(Double | Attribute); err != nil {
 				return
 			}
-		case "WIDTH":
+		case scanner.WIDTH:
 			if s.Width, err = t.Next().Decode(Double | Attribute); err != nil {
 				return
 			}
-		case "GEOMTRANSFORM":
+		case scanner.GEOMTRANSFORM:
 			if s.GeomTransform, err = t.Next().String(); err != nil {
 				return
 			}
-		case "END":
+		case scanner.END:
 			break Loop
-		case "":
-			if t.AtEnd() {
-				err = EndOfTokens
-				return
-			}
-			fallthrough
 		default:
 			err = fmt.Errorf("unhandled mapfile token: %s", token)
 			return

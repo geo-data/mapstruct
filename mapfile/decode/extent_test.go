@@ -24,26 +24,24 @@ var extentErrorTests = []struct {
 }{
 	{`
 FOOBAR 
-END`, errors.New(`expected token EXTENT, got: "FOOBAR"`)},
+END`, errors.New(`expected token EXTENT, got: FOOBAR`)},
 	{`
-EXTENT 1 2 3`, decode.EndOfTokens},
+EXTENT 1 2`, errors.New("could not decode X coordinate: unexpected end of mapfile")},
 	{`
-EXTENT foo 2 3 4`, errors.New(`invalid syntax for X coordinate: "foo"`)},
+EXTENT 1 2 3`, errors.New("could not decode Y coordinate: unexpected end of mapfile")},
 	{`
-EXTENT 1 foo 3 4`, errors.New(`invalid syntax for Y coordinate: "foo"`)},
+EXTENT foo 2 3 4`, errors.New(`could not decode X coordinate: token is not a number: foo`)},
 	{`
-EXTENT 1 2 foo 4`, errors.New(`invalid syntax for X coordinate: "foo"`)},
+EXTENT 1 foo 3 4`, errors.New(`could not decode Y coordinate: token is not a number: foo`)},
 	{`
-EXTENT 1 2 3 foo`, errors.New(`invalid syntax for Y coordinate: "foo"`)},
+EXTENT 1 2 foo 4`, errors.New(`could not decode X coordinate: token is not a number: foo`)},
+	{`
+EXTENT 1 2 3 foo`, errors.New(`could not decode Y coordinate: token is not a number: foo`)},
 }
 
 func TestDecodeExtent(t *testing.T) {
 	for _, tt := range extentTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Extent()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -58,11 +56,7 @@ func TestDecodeExtent(t *testing.T) {
 
 func TestDecodeExtentError(t *testing.T) {
 	for _, tt := range extentErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Extent()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected extent:", nil, ", got:", actual)

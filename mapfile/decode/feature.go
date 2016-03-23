@@ -2,13 +2,13 @@ package decode
 
 import (
 	"fmt"
+	"github.com/geo-data/mapfile/mapfile/decode/scanner"
 	"github.com/geo-data/mapfile/types"
 )
 
 func (t *Decoder) Feature() (feature *types.Feature, err error) {
-	token := t.Value()
-	if token != "FEATURE" {
-		err = fmt.Errorf("expected token FEATURE, got: %s", token)
+	var token *scanner.Token
+	if token, err = t.ExpectedToken(scanner.FEATURE); err != nil {
 		return
 	}
 	t.Next()
@@ -16,32 +16,29 @@ func (t *Decoder) Feature() (feature *types.Feature, err error) {
 	f := new(types.Feature)
 Loop:
 	for t != nil {
-		token := t.Value()
-		switch token {
-		case "WKT":
+		if token, err = t.Token(); err != nil {
+			return
+		}
+
+		switch token.Type {
+		case scanner.WKT:
 			if f.Wkt, err = t.Next().String(); err != nil {
 				return
 			}
-		case "ITEMS":
+		case scanner.ITEMS:
 			if f.Items, err = t.Next().String(); err != nil {
 				return
 			}
-		case "TEXT":
+		case scanner.TEXT:
 			if f.Text, err = t.Next().String(); err != nil {
 				return
 			}
-		case "POINTS":
+		case scanner.POINTS:
 			if f.Points, err = t.Points(); err != nil {
 				return
 			}
-		case "END":
+		case scanner.END:
 			break Loop
-		case "":
-			if t.AtEnd() {
-				err = EndOfTokens
-				return
-			}
-			fallthrough
 		default:
 			err = fmt.Errorf("unhandled mapfile token: %s", token)
 			return

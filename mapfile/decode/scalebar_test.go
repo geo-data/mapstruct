@@ -91,20 +91,16 @@ var scalebarErrorTests = []struct {
 	{"SCALEBAR", decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token SCALEBAR, got: "FOOBAR"`)},
+END`, errors.New(`expected token SCALEBAR, got: FOOBAR`)},
 	{`
 SCALEBAR
   FOO BAR
-END`, errors.New(`unhandled mapfile token: "FOO"`)},
+END`, errors.New(`unhandled mapfile token: FOO`)},
 }
 
 func TestDecodeScalebar(t *testing.T) {
 	for _, tt := range scalebarTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Scalebar()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -119,11 +115,7 @@ func TestDecodeScalebar(t *testing.T) {
 
 func TestDecodeScalebarError(t *testing.T) {
 	for _, tt := range scalebarErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Scalebar()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected scalebar:", nil, ", got:", actual)

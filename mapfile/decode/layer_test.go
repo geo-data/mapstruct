@@ -144,20 +144,16 @@ var layerErrorTests = []struct {
 	{"LAYER", decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token LAYER, got: "FOOBAR"`)},
+END`, errors.New(`expected token LAYER, got: FOOBAR`)},
 	{`
 LAYER
   FOO BAR
-END`, errors.New(`unhandled mapfile token: "FOO"`)},
+END`, errors.New(`unhandled mapfile token: FOO`)},
 }
 
 func TestDecodeLayer(t *testing.T) {
 	for _, tt := range layerTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Layer()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -172,11 +168,7 @@ func TestDecodeLayer(t *testing.T) {
 
 func TestDecodeLayerError(t *testing.T) {
 	for _, tt := range layerErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Layer()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected layer:", nil, ", got:", actual)

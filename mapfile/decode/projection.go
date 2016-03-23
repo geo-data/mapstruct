@@ -1,14 +1,13 @@
 package decode
 
 import (
-	"fmt"
+	"github.com/geo-data/mapfile/mapfile/decode/scanner"
 	"github.com/geo-data/mapfile/types"
 )
 
 func (t *Decoder) Projection() (projection types.Projection, err error) {
-	token := t.Value()
-	if token != "PROJECTION" {
-		err = fmt.Errorf("expected token PROJECTION, got: %s", token)
+	var token *scanner.Token
+	if token, err = t.ExpectedToken(scanner.PROJECTION); err != nil {
 		return
 	}
 	t.Next()
@@ -16,16 +15,13 @@ func (t *Decoder) Projection() (projection types.Projection, err error) {
 	var p types.Projection
 Loop:
 	for t != nil {
-		token := t.Value()
-		switch token {
-		case "END":
+		if token, err = t.Token(); err != nil {
+			return
+		}
+
+		switch token.Type {
+		case scanner.END:
 			break Loop
-		case "":
-			if t.AtEnd() {
-				err = EndOfTokens
-				return
-			}
-			fallthrough
 		default:
 			var s types.String
 			if s, err = t.String(); err != nil {

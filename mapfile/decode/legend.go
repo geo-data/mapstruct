@@ -2,13 +2,13 @@ package decode
 
 import (
 	"fmt"
+	"github.com/geo-data/mapfile/mapfile/decode/scanner"
 	"github.com/geo-data/mapfile/types"
 )
 
 func (t *Decoder) Legend() (legend *types.Legend, err error) {
-	token := t.Value()
-	if token != "LEGEND" {
-		err = fmt.Errorf("expected token LEGEND, got: %s", token)
+	var token *scanner.Token
+	if token, err = t.ExpectedToken(scanner.LEGEND); err != nil {
 		return
 	}
 	t.Next()
@@ -16,20 +16,17 @@ func (t *Decoder) Legend() (legend *types.Legend, err error) {
 	l := new(types.Legend)
 Loop:
 	for t != nil {
-		token := t.Value()
-		switch token {
-		case "IMAGECOLOR":
+		if token, err = t.Token(); err != nil {
+			return
+		}
+
+		switch token.Type {
+		case scanner.IMAGECOLOR:
 			if l.ImageColor, err = t.Color(); err != nil {
 				return
 			}
-		case "END":
+		case scanner.END:
 			break Loop
-		case "":
-			if t.AtEnd() {
-				err = EndOfTokens
-				return
-			}
-			fallthrough
 		default:
 			err = fmt.Errorf("unhandled mapfile token: %s", token)
 			return

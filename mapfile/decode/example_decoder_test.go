@@ -33,10 +33,7 @@ MAP
   END
 END`
 
-	dec, err := decode.DecodeString(mapfile)
-	if err != nil {
-		log.Fatalf("DecodeString() failed: %s", err)
-	}
+	dec := decode.DecodeString(mapfile)
 
 	map_, err := dec.Map()
 	if err != nil {

@@ -65,7 +65,7 @@ END`, &types.Label{
 LABEL
   SIZE [foobar]
 END`, &types.Label{
-		Size: types.Keyword("foobar"),
+		Size: types.Attribute("foobar"),
 	}},
 	{`
 LABEL
@@ -94,20 +94,16 @@ var labelErrorTests = []struct {
 	{"LABEL", decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token LABEL, got: "FOOBAR"`)},
+END`, errors.New(`expected token LABEL, got: FOOBAR`)},
 	{`
 LABEL
   FOO BAR
-END`, errors.New(`unhandled mapfile token: "FOO"`)},
+END`, errors.New(`unhandled mapfile token: FOO`)},
 }
 
 func TestDecodeLabel(t *testing.T) {
 	for _, tt := range labelTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Label()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -122,11 +118,7 @@ func TestDecodeLabel(t *testing.T) {
 
 func TestDecodeLabelError(t *testing.T) {
 	for _, tt := range labelErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Label()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected label:", nil, ", got:", actual)

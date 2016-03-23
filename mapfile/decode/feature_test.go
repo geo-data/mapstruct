@@ -46,20 +46,16 @@ var featureErrorTests = []struct {
 	{"FEATURE", decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token FEATURE, got: "FOOBAR"`)},
+END`, errors.New(`expected token FEATURE, got: FOOBAR`)},
 	{`
 FEATURE
   FOO BAR
-END`, errors.New(`unhandled mapfile token: "FOO"`)},
+END`, errors.New(`unhandled mapfile token: FOO`)},
 }
 
 func TestDecodeFeature(t *testing.T) {
 	for _, tt := range featureTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Feature()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -74,11 +70,7 @@ func TestDecodeFeature(t *testing.T) {
 
 func TestDecodeFeatureError(t *testing.T) {
 	for _, tt := range featureErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Feature()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected feature:", nil, ", got:", actual)

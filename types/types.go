@@ -12,6 +12,12 @@ type String string
 
 type Attribute string
 
+type Regex string
+
+type Listex string
+
+type Expression string
+
 type Keyword string
 
 type Uint8 uint8
@@ -22,18 +28,46 @@ type Uint32 uint32
 
 type Double float64
 
+// String implements fmt.Stringer()
 func (a Attribute) String() string {
-	attr := string(a)
-	if len(attr) > 0 {
-		return fmt.Sprintf("[%s]", string(attr))
+	s := string(a)
+	if len(s) > 0 {
+		return fmt.Sprintf("[%s]", string(s))
 	}
 	return ""
 }
 
 func (a Attribute) QuotedString() string {
-	attr := string(a)
+	s := string(a)
+	if len(s) > 0 {
+		return fmt.Sprintf(`"%s"`, string(s))
+	}
+	return ""
+}
+
+// String implements fmt.Stringer()
+func (r Regex) String() string {
+	s := string(r)
+	if len(s) > 0 {
+		return fmt.Sprintf("/%s/", string(s))
+	}
+	return ""
+}
+
+// String implements fmt.Stringer()
+func (l Listex) String() string {
+	attr := string(l)
 	if len(attr) > 0 {
-		return fmt.Sprintf(`"%s"`, string(attr))
+		return fmt.Sprintf("{%s}", string(attr))
+	}
+	return ""
+}
+
+// String implements fmt.Stringer()
+func (e Expression) String() string {
+	s := string(e)
+	if len(s) > 0 {
+		return fmt.Sprintf("(%s)", string(s))
 	}
 	return ""
 }

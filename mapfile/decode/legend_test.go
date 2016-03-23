@@ -30,20 +30,16 @@ var legendErrorTests = []struct {
 	{"LEGEND", decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token LEGEND, got: "FOOBAR"`)},
+END`, errors.New(`expected token LEGEND, got: FOOBAR`)},
 	{`
 LEGEND
   FOO BAR
-END`, errors.New(`unhandled mapfile token: "FOO"`)},
+END`, errors.New(`unhandled mapfile token: FOO`)},
 }
 
 func TestDecodeLegend(t *testing.T) {
 	for _, tt := range legendTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Legend()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -58,11 +54,7 @@ func TestDecodeLegend(t *testing.T) {
 
 func TestDecodeLegendError(t *testing.T) {
 	for _, tt := range legendErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Legend()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected legend:", nil, ", got:", actual)

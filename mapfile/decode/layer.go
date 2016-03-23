@@ -2,13 +2,13 @@ package decode
 
 import (
 	"fmt"
+	"github.com/geo-data/mapfile/mapfile/decode/scanner"
 	"github.com/geo-data/mapfile/types"
 )
 
 func (t *Decoder) Layer() (layer *types.Layer, err error) {
-	token := t.Value()
-	if token != "LAYER" {
-		err = fmt.Errorf("expected token LAYER, got: %s", token)
+	var token *scanner.Token
+	if token, err = t.ExpectedToken(scanner.LAYER); err != nil {
 		return
 	}
 	t.Next()
@@ -16,72 +16,69 @@ func (t *Decoder) Layer() (layer *types.Layer, err error) {
 	l := new(types.Layer)
 Loop:
 	for t != nil {
-		token := t.Value()
-		switch token {
-		case "NAME":
+		if token, err = t.Token(); err != nil {
+			return
+		}
+
+		switch token.Type {
+		case scanner.NAME:
 			if l.Name, err = t.Next().String(); err != nil {
 				return
 			}
-		case "EXTENT":
+		case scanner.EXTENT:
 			if l.Extent, err = t.Extent(); err != nil {
 				return
 			}
-		case "TYPE":
+		case scanner.TYPE:
 			if l.Type, err = t.Next().Keyword(); err != nil {
 				return
 			}
-		case "DEBUG":
+		case scanner.DEBUG:
 			if l.Debug, err = t.Next().Decode(Keyword | Integer); err != nil {
 				return
 			}
-		case "PROJECTION":
+		case scanner.PROJECTION:
 			if l.Projection, err = t.Projection(); err != nil {
 				return
 			}
-		case "DATA":
+		case scanner.DATA:
 			if l.Data, err = t.Next().String(); err != nil {
 				return
 			}
-		case "PROCESSING":
+		case scanner.PROCESSING:
 			if l.Processing, err = t.Next().String(); err != nil {
 				return
 			}
-		case "STATUS":
+		case scanner.STATUS:
 			if l.Status, err = t.Next().Keyword(); err != nil {
 				return
 			}
-		case "METADATA":
+		case scanner.METADATA:
 			if l.Metadata, err = t.Metadata(); err != nil {
 				return
 			}
-		case "CLASSITEM":
+		case scanner.CLASSITEM:
 			if l.ClassItem, err = t.Next().Attribute(); err != nil {
 				return
 			}
-		case "LABELITEM":
+		case scanner.LABELITEM:
 			if l.LabelItem, err = t.Next().Attribute(); err != nil {
 				return
 			}
-		case "CLASS":
+		case scanner.CLASS:
 			var c *types.Class
 			if c, err = t.Class(); err != nil {
 				return
 			}
 			l.Classes = append(l.Classes, c)
-		case "FEATURE":
+		case scanner.FEATURE:
 			var f *types.Feature
 			if f, err = t.Feature(); err != nil {
 				return
 			}
 			l.Features = append(l.Features, f)
-		case "END":
+		case scanner.END:
 			break Loop
-		case "":
-			if t.AtEnd() {
-				err = EndOfTokens
-				return
-			}
-			fallthrough
 		default:
 			err = fmt.Errorf("unhandled mapfile token: %s", token)
 			return

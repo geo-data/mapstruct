@@ -10,6 +10,9 @@ func (enc *Encoder) EncodeMap(m *types.Map) (err error) {
 	if err = enc.EncodeDirectiveStringer("NAME", m.Name); err != nil {
 		return
 	}
+	if err = enc.EncodeDirectiveStringer("DATAPATTERN", m.DataPattern); err != nil {
+		return
+	}
 	if err = enc.EncodeDirectiveStringer("IMAGETYPE", m.ImageType); err != nil {
 		return
 	}

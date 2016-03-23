@@ -13,10 +13,14 @@ import (
 
 func main() {
 	mapfile := os.Args[1]
-	dec, err := decode.DecodeMapfile(mapfile)
+
+	fh, err := os.Open(mapfile)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer fh.Close()
+
+	dec := decode.DecodeMapfile(fh)
 
 	var map_ *types.Map
 	if map_, err = dec.Map(); err != nil {
@@ -34,7 +38,7 @@ func main() {
 	var out bytes.Buffer
 	enc := encode.NewEncoder(&out)
 	if err = enc.EncodeMap(map_); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	if _, err = out.WriteTo(os.Stdout); err != nil {

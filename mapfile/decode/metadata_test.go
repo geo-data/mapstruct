@@ -40,7 +40,7 @@ METADATA
   "foo" "bar"`, decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token METADATA, got: "FOOBAR"`)},
+END`, errors.New(`expected token METADATA, got: FOOBAR`)},
 	{`
 METADATA
   "foo" "bar"
@@ -50,11 +50,7 @@ END`, errors.New(`expected value after key: "cat"`)},
 
 func TestDecodeMetadata(t *testing.T) {
 	for _, tt := range metadataTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Metadata()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -69,11 +65,7 @@ func TestDecodeMetadata(t *testing.T) {
 
 func TestDecodeMetadataError(t *testing.T) {
 	for _, tt := range metadataErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Metadata()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected metadata:", nil, ", got:", actual)

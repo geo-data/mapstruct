@@ -1,21 +1,24 @@
 package decode
 
 import (
-	"fmt"
+	"github.com/geo-data/mapfile/mapfile/decode/scanner"
 	"github.com/geo-data/mapfile/types"
 )
 
 func (t *Decoder) Points() (points types.Points, err error) {
-	token := t.Value()
-	if token != "POINTS" {
-		err = fmt.Errorf("expected token POINTS, got: %s", token)
+	var token *scanner.Token
+	if token, err = t.ExpectedToken(scanner.POINTS); err != nil {
 		return
 	}
 	t.Next()
 
 	var ps types.Points
 	for t != nil {
-		if t.Value() == "END" {
+		if token, err = t.Token(); err != nil {
+			return
+		}
+
+		if token.Type == scanner.END {
 			break
 		}
 

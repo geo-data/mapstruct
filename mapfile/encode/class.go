@@ -10,7 +10,7 @@ func (enc *Encoder) EncodeClass(c *types.Class) (err error) {
 	if err = enc.EncodeDirectiveStringer("NAME", c.Name); err != nil {
 		return
 	}
-	if err = enc.EncodeDirectiveStringer("EXPRESSION", c.Expression); err != nil {
+	if err = enc.EncodeDirectiveUnion("EXPRESSION", c.Expression); err != nil {
 		return
 	}
 	if err = enc.EncodeDirectiveStringer("TEMPLATE", c.Template); err != nil {

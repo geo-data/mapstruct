@@ -10,6 +10,9 @@ const (
 	Double
 	Integer
 	Keyword
+	Expression
+	Regex
+	Listex
 )
 
 func (t Type) Is(t2 Type) bool {
@@ -32,6 +35,15 @@ func (t Type) String() string {
 	}
 	if t.Is(Keyword) {
 		types = append(types, "Keyword")
+	}
+	if t.Is(Expression) {
+		types = append(types, "Expression")
+	}
+	if t.Is(Regex) {
+		types = append(types, "Regular expression")
+	}
+	if t.Is(Listex) {
+		types = append(types, "List expression")
 	}
 
 	return strings.Join(types, ", ")

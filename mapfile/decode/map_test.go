@@ -112,20 +112,16 @@ var mapErrorTests = []struct {
 	{"MAP", decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token MAP, got: "FOOBAR"`)},
+END`, errors.New(`expected token MAP, got: FOOBAR`)},
 	{`
 MAP
   FOO BAR
-END`, errors.New(`unhandled mapfile token: "FOO"`)},
+END`, errors.New(`unhandled mapfile token: FOO`)},
 }
 
 func TestDecodeMap(t *testing.T) {
 	for _, tt := range mapTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Map()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -140,11 +136,7 @@ func TestDecodeMap(t *testing.T) {
 
 func TestDecodeMapError(t *testing.T) {
 	for _, tt := range mapErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Map()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected map:", nil, ", got:", actual)

@@ -27,20 +27,16 @@ FOOBAR 5 10`, decode.EndOfTokens},
 	{`
 COLOR 256 2 3`, errors.New(`strconv.ParseUint: parsing "256": value out of range`)},
 	{`
-COLOR foo 2 3`, errors.New(`strconv.ParseUint: parsing "\"foo\"": invalid syntax`)},
+COLOR foo 2 3`, errors.New(`token is not a number: foo`)},
 	{`
-COLOR 1 foo 3`, errors.New(`strconv.ParseUint: parsing "\"foo\"": invalid syntax`)},
+COLOR 1 foo 3`, errors.New(`token is not a number: foo`)},
 	{`
-COLOR 1 2 foo`, errors.New(`strconv.ParseUint: parsing "\"foo\"": invalid syntax`)},
+COLOR 1 2 foo`, errors.New(`token is not a number: foo`)},
 }
 
 func TestDecodeColor(t *testing.T) {
 	for _, tt := range colorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Color()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -55,11 +51,7 @@ func TestDecodeColor(t *testing.T) {
 
 func TestDecodeColorError(t *testing.T) {
 	for _, tt := range colorErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Color()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected color:", nil, ", got:", actual)

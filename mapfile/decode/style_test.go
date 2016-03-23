@@ -84,20 +84,16 @@ var styleErrorTests = []struct {
 	{"STYLE", decode.EndOfTokens},
 	{`
 FOOBAR
-END`, errors.New(`expected token STYLE, got: "FOOBAR"`)},
+END`, errors.New(`expected token STYLE, got: FOOBAR`)},
 	{`
 STYLE
   FOO BAR
-END`, errors.New(`unhandled mapfile token: "FOO"`)},
+END`, errors.New(`unhandled mapfile token: FOO`)},
 }
 
 func TestDecodeStyle(t *testing.T) {
 	for _, tt := range styleTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Style()
 		if err != nil {
 			t.Error("For:", tt.input, ", expected error:", nil, ", got:", err)
@@ -112,11 +108,7 @@ func TestDecodeStyle(t *testing.T) {
 
 func TestDecodeStyleError(t *testing.T) {
 	for _, tt := range styleErrorTests {
-		dec, err := decode.DecodeString(tt.input)
-		if err != nil {
-			t.Error("For decoding:", tt.input, ", expected error:", nil, ", got:", err)
-			continue
-		}
+		dec := decode.DecodeString(tt.input)
 		actual, err := dec.Style()
 		if actual != nil {
 			t.Error("For:", tt.input, ", expected style:", nil, ", got:", actual)
