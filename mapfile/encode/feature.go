@@ -1,6 +1,6 @@
 package encode
 
-import "github.com/geo-data/mapfile/types"
+import "github.com/geo-data/mapstruct/types"
 
 func (enc *Encoder) EncodeFeature(f *types.Feature) (err error) {
 	if err = enc.StartDirective("FEATURE"); err != nil {

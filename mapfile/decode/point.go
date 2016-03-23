@@ -2,7 +2,7 @@ package decode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapstruct/types"
 )
 
 func (t *Decoder) Point() (point *types.Point, err error) {

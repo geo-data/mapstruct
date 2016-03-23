@@ -2,7 +2,7 @@ package decode_test
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/mapfile/decode"
+	"github.com/geo-data/mapstruct/mapfile/decode"
 	"log"
 )
 

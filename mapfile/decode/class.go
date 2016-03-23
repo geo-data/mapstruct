@@ -2,8 +2,8 @@ package decode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/mapfile/decode/scanner"
-	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapstruct/mapfile/decode/scanner"
+	"github.com/geo-data/mapstruct/types"
 )
 
 func (t *Decoder) Class() (class *types.Class, err error) {

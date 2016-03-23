@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapstruct/types"
 )
 
 type Encoder struct {

@@ -1,8 +1,8 @@
 package decode
 
 import (
-	"github.com/geo-data/mapfile/mapfile/decode/scanner"
-	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapstruct/mapfile/decode/scanner"
+	"github.com/geo-data/mapstruct/types"
 )
 
 func (t *Decoder) Projection() (projection types.Projection, err error) {

@@ -1,6 +1,6 @@
 package decode
 
-import "github.com/geo-data/mapfile/types"
+import "github.com/geo-data/mapstruct/types"
 
 func (t *Decoder) Color() (color *types.Color, err error) {
 	c := new(types.Color)

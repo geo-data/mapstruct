@@ -2,7 +2,7 @@ package encode
 
 import (
 	"fmt"
-	"github.com/geo-data/mapfile/types"
+	"github.com/geo-data/mapstruct/types"
 )
 
 func (enc *Encoder) EncodePoints(p types.Points) (err error) {

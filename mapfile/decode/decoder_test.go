@@ -1,8 +1,8 @@
 package decode_test
 
 import (
-	"github.com/geo-data/mapfile/mapfile/decode"
-	"github.com/geo-data/mapfile/mapfile/decode/scanner"
+	"github.com/geo-data/mapstruct/mapfile/decode"
+	"github.com/geo-data/mapstruct/mapfile/decode/scanner"
 	"reflect"
 	"testing"
 )

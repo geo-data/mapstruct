@@ -1,6 +1,6 @@
 package encode
 
-import "github.com/geo-data/mapfile/types"
+import "github.com/geo-data/mapstruct/types"
 
 func (enc *Encoder) EncodeLayer(l *types.Layer) (err error) {
 	if err = enc.StartDirective("LAYER"); err != nil {

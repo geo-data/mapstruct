@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/geo-data/mapfile/mapfile/decode/scanner"
+	"github.com/geo-data/mapstruct/mapfile/decode/scanner"
 	"io"
 )
 
